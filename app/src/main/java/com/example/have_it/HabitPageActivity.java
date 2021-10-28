@@ -25,9 +25,10 @@ import java.util.List;
 public class HabitPageActivity extends AppCompatActivity {
     ListView todayHabitList;
     ListView habitList;
-    ArrayAdapter<Habit> habitAdapter;
-    ArrayAdapter<Habit> todayHabitAdapter;
+    HabitList habitAdapter;
+    HabitList todayHabitAdapter;
     ArrayList<Habit> habitDataList;
+    ArrayList<Habit> todayHabitDataList;
     FirebaseFirestore db;
 
     public static final String EXTRA_MESSAGE = "com.example.have_it.MESSAGE";
@@ -51,8 +52,11 @@ public class HabitPageActivity extends AppCompatActivity {
 
         habitDataList = new ArrayList<>();
         habitAdapter = new HabitList(this, habitDataList);
+        todayHabitDataList = new ArrayList<>();
+        todayHabitAdapter = new HabitList(this, todayHabitDataList);
 
         habitList.setAdapter(habitAdapter);
+        todayHabitList.setAdapter(todayHabitAdapter);
 
         db = FirebaseFirestore.getInstance();
 
@@ -74,6 +78,12 @@ public class HabitPageActivity extends AppCompatActivity {
                     habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray));
                 }
                 habitAdapter.notifyDataSetChanged();
+                todayHabitDataList.clear();
+                ArrayList<Habit> today_temp = habitAdapter.getTodayHabits();
+                for (Habit each : today_temp){
+                    todayHabitDataList.add(each);
+                }
+                todayHabitAdapter.notifyDataSetChanged();
             }
         });
     }
