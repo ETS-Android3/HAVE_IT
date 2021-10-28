@@ -25,6 +25,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HabitPageActivity" />
         </activity>
+        <activity android:name=".ViewEditHabitActivity"
+            android:parentActivityName=".HabitPageActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HabitPageActivity" />
+        </activity>
     </application>
 
 </manifest>

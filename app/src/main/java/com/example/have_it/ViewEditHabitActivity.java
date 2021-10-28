@@ -2,6 +2,7 @@ package com.example.have_it;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,32 +31,58 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class AddHabitActivity extends AppCompatActivity {
+public class ViewEditHabitActivity extends AppCompatActivity {
     FirebaseFirestore db;
     EditText titleText;
     EditText reasonText;
     TextView startDateText;
     WeekdaysPicker weekdaysPicker;
     Button confirm;
+    Button delete;
     DatePickerDialog picker;
     Activity nowActivity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_habit);
+        setContentView(R.layout.activity_editview_habit);
 
         db = FirebaseFirestore.getInstance();
+
         final CollectionReference habitListReference = db.collection("Users")
                 .document("DefaultUser").collection("HabitList");
 
-        titleText = findViewById(R.id.habit_title_editText);
-        reasonText = findViewById(R.id.habit_reason_editText);
-        weekdaysPicker = (WeekdaysPicker) findViewById(R.id.habit_weekday_selection);
-        startDateText = findViewById(R.id.habit_start_date);
-        confirm = findViewById(R.id.add_habit_button);
+        titleText = findViewById(R.id.habit_title_editText_viewedit);
+        reasonText = findViewById(R.id.habit_reason_editText_viewedit);
+        weekdaysPicker = (WeekdaysPicker) findViewById(R.id.habit_weekday_selection_viewedit);
+        startDateText = findViewById(R.id.habit_start_date_viewedit);
+        confirm = findViewById(R.id.confirm_button_viewedit);
+        delete = findViewById(R.id.delete_button);
 
-        weekdaysPicker.setSelected(true);
+        Intent i = getIntent();
+
+        Habit viewed_habit = (Habit)i.getSerializableExtra("habit");
+
+
+
+        titleText.setText(viewed_habit.getTitle());
+        reasonText.setText(viewed_habit.getReason());
+
+        SimpleDateFormat spf=new SimpleDateFormat("yyyy-MM-dd");
+        startDateText.setText(spf.format(viewed_habit.getDateStart()));
+
+
+        List<Integer> weekdayReg = new ArrayList<>(7);
+
+        Integer c = 1;
+        for (boolean each : viewed_habit.getWeekdayReg()) {
+            if (each) {
+                weekdayReg.add(c);
+            }
+            c++;
+        }
+        weekdaysPicker.setSelectedDays(weekdayReg);
+
 
         startDateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +100,28 @@ public class AddHabitActivity extends AppCompatActivity {
                             }
                         }, year, month, day);
                 picker.show();
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                habitListReference.document(viewed_habit.getTitle())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Delete Habit", "Habit data has been deleted successfully!");
+                                finish();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Delete Habit", "Error deleting document", e);
+                            }
+                        });
+
             }
         });
 
@@ -107,6 +156,21 @@ public class AddHabitActivity extends AppCompatActivity {
                     data.put("dateStart", startDateTimestamp);
                     data.put("weekdayReg", weekdayReg);
 
+                    habitListReference.document(viewed_habit.getTitle())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Delete Habit", "Habit data has been deleted successfully!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Delete Habit", "Error deleting document", e);
+                                }
+                            });
+
                     habitListReference
                             .document(title)
                             .set(data)
@@ -114,7 +178,7 @@ public class AddHabitActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     // These are a method which gets executed when the task is succeeded
-                                    Log.d("Adding Habit", "Habit data has been added successfully!");
+                                    Log.d("Adding Habit", "Habit data has been edited successfully!");
                                     finish();
                                 }
                             })
@@ -122,8 +186,8 @@ public class AddHabitActivity extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     // These are a method which gets executed if there’s any problem
-                                    Log.d("Adding Habit", "Habit data could not be added!" + e.toString());
-                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
+                                    Log.d("Adding Habit", "Habit data could not be edited!" + e.toString());
+                                    Toast.makeText(getApplicationContext(),"Not being able to edit data, please check duplication title", Toast.LENGTH_LONG).show();
                                 }
                             });
                 }

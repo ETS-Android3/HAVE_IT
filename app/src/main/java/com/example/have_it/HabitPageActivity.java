@@ -2,8 +2,10 @@ package com.example.have_it;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -52,7 +54,6 @@ public class HabitPageActivity extends AppCompatActivity {
             }
         });
 
-
         habitDataList = new ArrayList<>();
         habitAdapter = new HabitList(this, habitDataList);
         todayHabitDataList = new ArrayList<>();
@@ -88,6 +89,22 @@ public class HabitPageActivity extends AppCompatActivity {
                 }
                 todayHabitAdapter.notifyDataSetChanged();
             }
+        });
+
+
+
+        final Intent view_editHabitIntent = new Intent(this, ViewEditHabitActivity.class);
+        habitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//                view_editHabitIntent.putExtra(EXTRA_MESSAGE, habitDataList.get(position));
+                view_editHabitIntent.putExtra("habit", habitDataList.get(position));
+
+                startActivity(view_editHabitIntent);
+
+            }
+
         });
     }
 }

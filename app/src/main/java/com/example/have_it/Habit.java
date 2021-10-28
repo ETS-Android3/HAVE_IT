@@ -3,11 +3,13 @@ package com.example.have_it;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  *
  */
-public class Habit {
+@SuppressWarnings("serial")
+public class Habit implements Serializable{
     private String title;
     private String reason;
     private Date dateStart;
