@@ -43,5 +43,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-firestore'
+    //for weekday selector
+    implementation 'com.github.DavidProdinger:weekdays-selector:1.1.1'
+
 
 }

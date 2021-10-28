@@ -36,7 +36,6 @@ public class HabitList extends ArrayAdapter<Habit> {
         return view;
     }
 
-    //TODO:
     //The method for getting a habit list of the habits to be done today
     public ArrayList<Habit> getTodayHabits(){
         ArrayList<Habit> result = new ArrayList<Habit>();

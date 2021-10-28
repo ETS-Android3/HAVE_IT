@@ -1,5 +1,6 @@
 package com.example.have_it;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,9 +44,11 @@ public class HabitPageActivity extends AppCompatActivity {
         todayHabitList = findViewById(R.id.today_habit_list);
 
         final FloatingActionButton addCityButton = findViewById(R.id.add_habit_button);
+        final Intent addHabitIntent = new Intent(this, AddHabitActivity.class);
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(addHabitIntent);
             }
         });
 
