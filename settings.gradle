@@ -4,8 +4,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
-        //new repo for weekday selector
-        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "Have_It"

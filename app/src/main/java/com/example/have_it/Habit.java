@@ -1,15 +1,12 @@
 package com.example.have_it;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  *
  */
-@SuppressWarnings("serial")
-public class Habit implements Serializable{
+public class Habit {
     private String title;
     private String reason;
     private Date dateStart;
@@ -26,10 +23,6 @@ public class Habit implements Serializable{
         this.title = title;
         this.reason = reason;
         this.dateStart = dateStart;
-        if (weekdayReg.size() !=7){
-            Boolean[] defaultReg= {false, false, false, false, false, false, false};
-            this.weekdayReg = new ArrayList<>(Arrays.asList(defaultReg));
-        }
         this.weekdayReg = weekdayReg;
     }
 
