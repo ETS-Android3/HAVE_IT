@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HabitList extends ArrayAdapter<Habit> {
     private ArrayList<Habit> habits;
@@ -35,9 +36,16 @@ public class HabitList extends ArrayAdapter<Habit> {
         return view;
     }
 
-    //TODO:
     //The method for getting a habit list of the habits to be done today
-    public HabitList getTodayHabits(){
-        return this;
+    public ArrayList<Habit> getTodayHabits(){
+        ArrayList<Habit> result = new ArrayList<Habit>();
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        for (Habit each : habits){
+            if (each.getWeekdayReg().get(day-1)){
+                result.add(each);
+            }
+        }
+        return result;
     }
 }
