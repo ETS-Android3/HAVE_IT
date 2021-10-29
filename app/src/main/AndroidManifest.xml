@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Have_It">
         <activity
+            android:name=".UserLogin"
+            android:exported="true" />
+        <activity
             android:name=".HabitPageActivity"
             android:exported="true">
             <intent-filter>
@@ -18,15 +21,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddHabitActivity"
+        <activity
+            android:name=".AddHabitActivity"
             android:parentActivityName=".HabitPageActivity">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HabitPageActivity" />
         </activity>
-        <activity android:name=".ViewEditHabitActivity"
+        <activity
+            android:name=".ViewEditHabitActivity"
             android:parentActivityName=".HabitPageActivity">
+
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
