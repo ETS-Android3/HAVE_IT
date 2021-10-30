@@ -106,5 +106,18 @@ public class HabitPageActivity extends AppCompatActivity {
             }
 
         });
+
+        todayHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//                view_editHabitIntent.putExtra(EXTRA_MESSAGE, habitDataList.get(position));
+                view_editHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
+
+                startActivity(view_editHabitIntent);
+
+            }
+
+        });
     }
 }
