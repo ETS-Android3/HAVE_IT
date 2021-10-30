@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -60,28 +61,29 @@ public class ViewEditHabitActivity extends AppCompatActivity {
         delete = findViewById(R.id.delete_button);
 
         Intent i = getIntent();
+        String selected_title = i.getStringExtra("habit");
 
-        Habit viewed_habit = (Habit)i.getSerializableExtra("habit");
+        habitListReference.document(selected_title).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                titleText.setText(selected_title);
+                reasonText.setText((String)documentSnapshot.getData().get("reason"));
+                SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
+                startDateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("dateStart")).toDate()));
 
+                List<Integer> weekdayReg = new ArrayList<>(7);
 
-
-        titleText.setText(viewed_habit.getTitle());
-        reasonText.setText(viewed_habit.getReason());
-
-        SimpleDateFormat spf=new SimpleDateFormat("yyyy-MM-dd");
-        startDateText.setText(spf.format(viewed_habit.getDateStart()));
-
-
-        List<Integer> weekdayReg = new ArrayList<>(7);
-
-        Integer c = 1;
-        for (boolean each : viewed_habit.getWeekdayReg()) {
-            if (each) {
-                weekdayReg.add(c);
+                Integer c = 1;
+                for (boolean each : (ArrayList<Boolean>)documentSnapshot.getData().get("weekdayReg")) {
+                    if (each) {
+                        weekdayReg.add(c);
+                    }
+                    c++;
+                }
+                weekdaysPicker.setSelectedDays(weekdayReg);
             }
-            c++;
-        }
-        weekdaysPicker.setSelectedDays(weekdayReg);
+        });
+
 
 
         startDateText.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +108,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                habitListReference.document(viewed_habit.getTitle())
+                habitListReference.document(selected_title)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -156,7 +158,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                     data.put("dateStart", startDateTimestamp);
                     data.put("weekdayReg", weekdayReg);
 
-                    habitListReference.document(viewed_habit.getTitle())
+                    habitListReference.document(selected_title)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
