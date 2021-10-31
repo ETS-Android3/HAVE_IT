@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Have_It">
         <activity
+            android:name=".ForgotPassword"
+            android:exported="true" />
+        <activity
             android:name=".User_Register"
             android:exported="true" />
         <activity

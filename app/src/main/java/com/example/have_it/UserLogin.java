@@ -17,10 +17,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 
 public class UserLogin extends AppCompatActivity implements View.OnClickListener  {
-    private TextView register;
+    private TextView register,forgotPassword;
     private EditText editTextEmail, editTextPassword;
     private Button signIn;
     private FirebaseAuth mAuth;
@@ -42,6 +45,9 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         mAuth = FirebaseAuth.getInstance();
+
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(this);
     }
     @Override
     public void onClick(View v){
@@ -51,6 +57,9 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                 break;
             case R.id.signIn:
                 userLogin();
+                break;
+            case R.id.forgotPassword:
+                startActivity(new Intent(this,ForgotPassword.class));
                 break;
         }
     }
@@ -86,8 +95,16 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    //redirect to user profile
-                    startActivity(new Intent(UserLogin.this,HabitPageActivity.class));
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    //User Email verification
+                    if(user.isEmailVerified()){
+                        //redirect to user profile
+                        startActivity(new Intent(UserLogin.this,HabitPageActivity.class));
+                    }else{
+                        user.sendEmailVerification();
+                        Toast.makeText(UserLogin.this, "check your email to verify your account!", Toast.LENGTH_LONG).show();
+                    }
+
                 }else {
                     Toast.makeText(UserLogin.this,"Failed to login! Please check your credentials!",Toast.LENGTH_LONG).show();
                 }

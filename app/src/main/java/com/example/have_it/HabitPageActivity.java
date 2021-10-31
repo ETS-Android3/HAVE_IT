@@ -34,6 +34,7 @@ public class HabitPageActivity extends AppCompatActivity {
     ArrayList<Habit> todayHabitDataList;
     FirebaseFirestore db;
 
+
     public static final String EXTRA_MESSAGE = "com.example.have_it.MESSAGE";
 
 
