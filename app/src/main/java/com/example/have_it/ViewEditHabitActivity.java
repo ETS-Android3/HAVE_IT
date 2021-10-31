@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dpro.widgets.WeekdaysPicker;
@@ -22,7 +23,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -108,16 +113,21 @@ public class ViewEditHabitActivity extends AppCompatActivity {
             }
         });
 
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                final CollectionReference EventListReference = db.collection("Users")
+                        .document("DefaultUser").collection("HabitList").document(selected_title).collection("Eventlist");
+
                 habitListReference.document(selected_title)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.d("Delete Habit", "Habit data has been deleted successfully!");
-//                                finish();
+                                finish();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -127,24 +137,29 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                             }
                         });
 
+                EventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                            FirebaseFirestoreException error) {
+                        for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                        {
+                            String event = (String) doc.getData().get("event");
+                            EventListReference.document(event)
+                                    .delete();
 
-                habitListReference.document(selected_title).collection("Evenlist").document()
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("Delete Collection", "Habit data has been deleted successfully!");
-                                finish();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("Delete Collection", "Error deleting document", e);
-                            }
-                        });;
+                        }
 
-            }
+
+                    }
+                });
+
+
+
+
+
+
+
+           }
         });
 
         confirm.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +192,8 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                     data.put("reason", reason);
                     data.put("dateStart", startDateTimestamp);
                     data.put("weekdayReg", weekdayReg);
+
+
 
 
                     habitListReference.document(selected_title)
@@ -241,4 +258,3 @@ public class ViewEditHabitActivity extends AppCompatActivity {
 
 
 }
-
