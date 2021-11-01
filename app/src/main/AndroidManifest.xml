@@ -10,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Have_It">
         <activity
-            android:name=".ForgotPassword"
+            android:name=".ForgotPasswordActivity"
             android:exported="true" />
         <activity
-            android:name=".User_Register"
+            android:name=".User_RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".UserLogin"
+            android:name=".UserLoginActivity"
             android:exported="true" />
         <activity
             android:name=".HabitPageActivity"

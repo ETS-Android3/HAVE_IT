@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -18,12 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
-
-public class User_Register extends AppCompatActivity implements View.OnClickListener {
+public class User_RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private TextView banner, registerUser;
@@ -54,7 +50,7 @@ public class User_Register extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.banner:
-                startActivity(new Intent(this,UserLogin.class));
+                startActivity(new Intent(this, UserLoginActivity.class));
                 break;
             case R.id.registerUser:
                 registerUser();
@@ -108,18 +104,18 @@ public class User_Register extends AppCompatActivity implements View.OnClickList
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(User_Register.this,"User has been registered successfully!",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(User_RegisterActivity.this,"User has been registered successfully!",Toast.LENGTH_LONG).show();
 
                                         //redirect to login layout
-                                        startActivity(new Intent(User_Register.this,UserLogin.class));
+                                        startActivity(new Intent(User_RegisterActivity.this, UserLoginActivity.class));
                                     }else{
-                                        Toast.makeText(User_Register.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(User_RegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
                                     }
                                     progressBar.setVisibility(View.GONE);
                                 }
                             });
                         }else{
-                            Toast.makeText(User_Register.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
+                            Toast.makeText(User_RegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }

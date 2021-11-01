@@ -19,10 +19,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.w3c.dom.Text;
 
-
-public class UserLogin extends AppCompatActivity implements View.OnClickListener  {
+public class UserLoginActivity extends AppCompatActivity implements View.OnClickListener  {
     private TextView register,forgotPassword;
     private EditText editTextEmail, editTextPassword;
     private Button signIn;
@@ -53,13 +51,13 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v){
         switch (v.getId()){
             case R.id.register:
-                startActivity(new Intent(this,User_Register.class));
+                startActivity(new Intent(this, User_RegisterActivity.class));
                 break;
             case R.id.signIn:
                 userLogin();
                 break;
             case R.id.forgotPassword:
-                startActivity(new Intent(this,ForgotPassword.class));
+                startActivity(new Intent(this, ForgotPasswordActivity.class));
                 break;
         }
     }
@@ -99,14 +97,14 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
                     //User Email verification
                     if(user.isEmailVerified()){
                         //redirect to user profile
-                        startActivity(new Intent(UserLogin.this,HabitPageActivity.class));
+                        startActivity(new Intent(UserLoginActivity.this,HabitPageActivity.class));
                     }else{
                         user.sendEmailVerification();
-                        Toast.makeText(UserLogin.this, "check your email to verify your account!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(UserLoginActivity.this, "check your email to verify your account!", Toast.LENGTH_LONG).show();
                     }
 
                 }else {
-                    Toast.makeText(UserLogin.this,"Failed to login! Please check your credentials!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(UserLoginActivity.this,"Failed to login! Please check your credentials!",Toast.LENGTH_LONG).show();
                 }
             }
         });

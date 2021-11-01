@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ForgotPassword extends AppCompatActivity {
+public class ForgotPasswordActivity extends AppCompatActivity {
 
     private EditText emailEditText;
     private Button resetPasswordButton;
@@ -62,9 +62,9 @@ public class ForgotPassword extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
 
                 if(task.isSuccessful()){
-                    Toast.makeText(ForgotPassword.this, "Reset email has been send!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForgotPasswordActivity.this, "Reset email has been send!", Toast.LENGTH_LONG).show();
                 }else{
-                    Toast.makeText(ForgotPassword.this, "Try again! Something went wrong!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForgotPasswordActivity.this, "Try again! Something went wrong!", Toast.LENGTH_LONG).show();
                 }
             }
         });
