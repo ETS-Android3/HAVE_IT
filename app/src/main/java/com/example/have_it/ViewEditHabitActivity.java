@@ -198,7 +198,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                                     event.put("event", doc.getData().get("event"));
 
                                     habitListReference.document(selected_title).collection("Eventlist")
-                                            .document((String) doc.getData().get("event"))
+                                            .document((String) doc.getData().get("date"))
                                             .delete()
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -216,7 +216,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
 
 
                                     habitListReference.document(title).collection("Eventlist")
-                                            .document((String) doc.getData().get("event"))
+                                            .document((String) doc.getData().get("date"))
                                             .set(event)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -290,8 +290,8 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                             FirebaseFirestoreException error) {
                         for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                         {
-                            String event = (String) doc.getData().get("event");
-                            EventListReference.document(event)
+                            String date = (String) doc.getData().get("date");
+                            EventListReference.document(date)
                                     .delete();
 
                         }
