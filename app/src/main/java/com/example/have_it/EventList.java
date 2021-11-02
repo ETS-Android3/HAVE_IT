@@ -11,8 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class EventList extends ArrayAdapter<Event> {
     private ArrayList<Event> events;
@@ -33,7 +36,10 @@ public class EventList extends ArrayAdapter<Event> {
         }
         Event event = events.get(position);
         TextView habitName = view.findViewById(R.id.event_title);
-        habitName.setText(event.getEvent());
+        String date_event=event.getDate()+"/"+event.getEvent();
+
+
+       habitName.setText(date_event);
         return view;
     }
 
