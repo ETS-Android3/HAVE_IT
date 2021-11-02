@@ -111,6 +111,14 @@ public class AddEventActivity extends AppCompatActivity {
                     data.put("event", event);
 
                     data.put("date", DateText.getText().toString());
+                    Date startDate = new Date();
+                    try {
+                        startDate = new SimpleDateFormat("yyyy-MM-dd")
+                                .parse(DateText.getText().toString());
+                    } catch (ParseException e){
+                        Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
+                        return;
+                    }
 
 
                     eventListReference
