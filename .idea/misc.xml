@@ -3,9 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/activity_add_event.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/activity_add_habit.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_event_page.xml" value="0.2359375" />
+        <entry key="app/src/main/res/layout/activity_forgot_password.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/activity_habit_homepage.xml" value="0.21041666666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15625" />
+        <entry key="app/src/main/res/layout/activity_user_register.xml" value="0.2203125" />
+        <entry key="app/src/main/res/layout/activity_view_edit_event.xml" value="0.2203125" />
+        <entry key="app/src/main/res/layout/activity_view_edit_habit.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/event_list_content.xml" value="0.2" />
         <entry key="app/src/main/res/layout/habit_list_content.xml" value="0.11865942028985507" />
       </map>
     </option>

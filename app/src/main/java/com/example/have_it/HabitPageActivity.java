@@ -26,45 +26,46 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ *This is the activity for main page of viewing habits
+ * @author yulingshen
  */
 public class HabitPageActivity extends AppCompatActivity {
     /**
-     *
+     *A reference to today habit list view, of class {@link ListView}
      */
     ListView todayHabitList;
     /**
-     *
+     *A reference to all habit list view, of class {@link ListView}
      */
     ListView habitList;
     /**
-     *
+     *habit adapter, of class {@link HabitList}
      */
     HabitList habitAdapter;
     /**
-     *
+     *today habit adapter, of class {@link HabitList}
      */
     HabitList todayHabitAdapter;
     /**
-     *
+     *habit data list, of class {@link ArrayList}
      */
     ArrayList<Habit> habitDataList;
     /**
-     *
+     *today data list, of class {@link ArrayList}
      */
     ArrayList<Habit> todayHabitDataList;
     /**
-     *
+     *A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
     /**
-     *
+     *The extra message used for intent, of class {@link String}
      */
     public static final String EXTRA_MESSAGE = "com.example.have_it.MESSAGE";
 
     /**
-     *
-     * @param savedInstanceState
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,15 @@ public class HabitPageActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 //                view_editHabitIntent.putExtra(EXTRA_MESSAGE, habitDataList.get(position));
                 view_editHabitIntent.putExtra("habit", habitDataList.get(position).getTitle());
+
+                startActivity(view_editHabitIntent);
+            }
+        });
+        todayHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+//                view_editHabitIntent.putExtra(EXTRA_MESSAGE, habitDataList.get(position));
+                view_editHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
 
                 startActivity(view_editHabitIntent);
             }
