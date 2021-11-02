@@ -3,11 +3,12 @@ package com.example.have_it;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  *
  */
-public class Habit {
+public class Habit{
     private String title;
     private String reason;
     private Date dateStart;

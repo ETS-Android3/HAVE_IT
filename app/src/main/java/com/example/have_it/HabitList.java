@@ -13,16 +13,37 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ *
+ */
 public class HabitList extends ArrayAdapter<Habit> {
+    /**
+     *
+     */
     private ArrayList<Habit> habits;
+    /**
+     *
+     */
     private Context context;
 
+    /**
+     *
+     * @param context
+     * @param habits
+     */
     public HabitList( Context context, ArrayList<Habit> habits) {
         super(context, 0, habits);
         this.habits = habits;
         this.context = context;
     }
 
+    /**
+     *
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -36,6 +57,10 @@ public class HabitList extends ArrayAdapter<Habit> {
         return view;
     }
 
+    /**
+     *
+     * @return
+     */
     //The method for getting a habit list of the habits to be done today
     public ArrayList<Habit> getTodayHabits(){
         ArrayList<Habit> result = new ArrayList<Habit>();
