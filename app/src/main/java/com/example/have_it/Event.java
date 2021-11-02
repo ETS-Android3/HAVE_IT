@@ -6,11 +6,11 @@ import java.util.Date;
 public class Event{
     private String event;
 
-    private Date date;
+    private String date;
 
 
 
-    public Event(String event,  Date date) {
+    public Event(String event,  String date) {
         this.event = event;
 
         this.date = date;
@@ -26,11 +26,11 @@ public class Event{
         this.event = event;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
