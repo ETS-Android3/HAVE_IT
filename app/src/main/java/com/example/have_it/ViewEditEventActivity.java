@@ -51,7 +51,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_edit_event);
          db = FirebaseFirestore.getInstance();
         Intent i = getIntent();
-        String selected_event = i.getStringExtra("event");
+        String selected_event_date = i.getStringExtra("event_date");
         String selected_habit = i.getStringExtra("habit");
 
 
@@ -67,15 +67,15 @@ public class ViewEditEventActivity extends AppCompatActivity {
 
 
 
-        EventListReference.document(selected_event).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        EventListReference.document(selected_event_date).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                 eventText.setText((String)documentSnapshot.getData().get("event"));
 
-                SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
-                DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
-
+              //  SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
+                //DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
+               DateText.setText( documentSnapshot.getData().get("date").toString());
 
             }
         });
@@ -103,8 +103,8 @@ public class ViewEditEventActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText( getApplicationContext(),  selected_event, Toast.LENGTH_SHORT).show();
-                EventListReference.document(selected_event)
+               // Toast.makeText( getApplicationContext(),  selected_event_date, Toast.LENGTH_SHORT).show();
+                EventListReference.document(selected_event_date)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -129,15 +129,6 @@ public class ViewEditEventActivity extends AppCompatActivity {
                 // Retrieving the city name and the province name from the EditText fields
                 final String event = eventText.getText().toString();
 
-                Date startDate = new Date();
-                try {
-                    startDate = new SimpleDateFormat("yyyy-MM-dd")
-                            .parse(DateText.getText().toString());
-                } catch (ParseException e){
-                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                final Timestamp startDateTimestamp = new Timestamp(startDate);
 
 
 
@@ -146,10 +137,10 @@ public class ViewEditEventActivity extends AppCompatActivity {
                 if (event.length()>0){
                     data.put("event", event);
 
-                    data.put("date", startDateTimestamp);
+                    data.put("date", DateText.getText().toString());
 
 
-                    EventListReference.document(selected_event)
+                    EventListReference.document(selected_event_date)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -166,7 +157,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
                             });
 
                     EventListReference
-                            .document(event)
+                            .document(DateText.getText().toString())
                             .set(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
