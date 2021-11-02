@@ -23,6 +23,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,18 +85,6 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),selected_title, Toast.LENGTH_LONG).show();
-                // Retrieving the city name and the province name from the EditText fields
-                final String title = eventText.getText().toString();
-
-                Date startDate = new Date();
-                try {
-                    startDate = new SimpleDateFormat("yyyy-MM-dd")
-                            .parse(DateText.getText().toString());
-                } catch (ParseException e){
-                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                final Timestamp startDateTimestamp = new Timestamp(startDate);
 
 
 
@@ -111,15 +100,8 @@ public class AddEventActivity extends AppCompatActivity {
                 // Retrieving the city name and the province name from the EditText fields
                 final String event = eventText.getText().toString();
 
-                Date startDate = new Date();
-                try {
-                    startDate = new SimpleDateFormat("yyyy-MM-dd")
-                            .parse(DateText.getText().toString());
-                } catch (ParseException e){
-                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                final Timestamp startDateTimestamp = new Timestamp(startDate);
+
+
 
 
 
@@ -128,11 +110,11 @@ public class AddEventActivity extends AppCompatActivity {
                 if (event.length()>0){
                     data.put("event", event);
 
-                    data.put("date", startDateTimestamp);
+                    data.put("date", DateText.getText().toString());
 
 
                     eventListReference
-                            .document(event)
+                            .document(DateText.getText().toString())
                             .set(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -166,3 +148,4 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
 }
+
