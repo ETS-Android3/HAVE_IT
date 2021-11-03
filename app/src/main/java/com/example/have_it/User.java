@@ -1,7 +1,10 @@
 package com.example.have_it;
 
 /**
- *
+ * User represent the UID information for each users.
+ * @author Jianbang Chen,Yuling Shen
+ * @see User_RegisterActivity
+ * @version 1.2
  */
 public class User {
     /**
