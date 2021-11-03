@@ -34,37 +34,38 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ *This is the activity for edit or delete event
+ * @author songkunguo
  */
 public class ViewEditEventActivity extends AppCompatActivity {
     /**
-     *
+     *A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
     /**
-     *
+     *Reference to event input, of class {@link EditText}
      */
     EditText eventText;
     /**
-     *
+     *Reference to date input, of class {@link EditText}
      */
     TextView dateText;
     /**
-     *
+     *Reference to the confirm button, of class {@link Button}
      */
     Button confirm;
     /**
-     *
+     *Reference to the delete button, of class {@link Button}
      */
     Button delete;
     /**
-     *
+     *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
 
     /**
-     *
-     * @param savedInstanceState
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,9 +205,9 @@ public class ViewEditEventActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param item
-     * @return
+     *This is the method invoked when the back in menu is pressed
+     * @param item used for its super class
+     * @return the result of its super selecting the same option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

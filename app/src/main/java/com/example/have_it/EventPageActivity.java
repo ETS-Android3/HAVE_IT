@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,33 +25,34 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
- *
+ *This is the activity for main page of viewing events
+ * @author songkunguo
  */
 public class EventPageActivity extends AppCompatActivity {
     /**
-     *
+     *Reference to the confirm addEvent, of class {@link Button}
      */
     FloatingActionButton addEvent;
     /**
-     *
+     *A reference to all event list view, of class {@link ListView}
      */
     ListView eventList;
     /**
-     *
+     *event adapter, of class {@link EventList}
      */
     EventList eventAdapter;
     /**
-     *
+     *A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
     /**
-     *
+     *event list, of class {@link ArrayList}
      */
     ArrayList<Event> eventDataList;
 
     /**
-     *
-     * @param savedInstanceState
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +109,9 @@ public class EventPageActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param item
-     * @return
+     *This is the method invoked when the back in menu is pressed
+     * @param item used for its super class
+     * @return the result of its super selecting the same option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
