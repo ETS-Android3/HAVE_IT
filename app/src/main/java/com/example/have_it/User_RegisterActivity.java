@@ -139,6 +139,8 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
 //                                    progressBar.setVisibility(View.GONE);
 //                                }
 //                            });
+                            FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
+                            Toast.makeText(User_RegisterActivity.this, "registered, check your email to verify your account!", Toast.LENGTH_LONG).show();
                             finish();
                         }else{
                             Toast.makeText(User_RegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
