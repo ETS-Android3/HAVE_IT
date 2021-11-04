@@ -1,11 +1,8 @@
 package com.example.have_it;
 
 /**
- * User represent the UID information for each users.
- * This is the class using Singleton to share the current logged in user information
- * @author Jianbang Chen,Yuling Shen
- * @see User_RegisterActivity
- * @version 1.2
+ *This is the class using Singleton to share the current logged in user information
+ * @author yulingshen
  */
 public class User {
     /**
