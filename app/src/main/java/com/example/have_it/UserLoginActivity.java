@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 /**
+ * UserLoginActivity represent all the activities happened at user login page.
+ * @author Jianbang Chen,Yuling Shen
+ * @see User_RegisterActivity,ForgotPasswordActivity
+ * @version 1.2
  *
  */
 public class UserLoginActivity extends AppCompatActivity implements View.OnClickListener  {
@@ -71,7 +75,8 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     *
+     *This method direct the user to the register page or forgot password page when the text view is clicked.
+     * Start sign in process when the button is clicked.
      * @param v
      */
     @Override
@@ -90,7 +95,8 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     *
+     * This method sort the email address and password from user input.
+     * Also check password and email validity, and notify the user error inputs.
      */
     private void userLogin() {
         String email = editTextEmail.getText().toString().trim();
