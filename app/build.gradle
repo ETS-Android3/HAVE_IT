@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.have_it"
-        minSdk 21
-        targetSdk 31
+        minSdkVersion 16
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -43,5 +43,10 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.4.2')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-database:20.0.2'
+    //for weekday selector
+    implementation 'com.github.DavidProdinger:weekdays-selector:1.1.1'
+
 
 }
