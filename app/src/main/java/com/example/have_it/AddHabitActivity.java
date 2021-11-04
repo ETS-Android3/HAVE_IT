@@ -22,6 +22,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,41 +33,42 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ *This is the activity for adding a new habit
+ * @author yulingshen
  */
 public class AddHabitActivity extends AppCompatActivity {
     /**
-     *
+     *A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
     /**
-     *
+     *Reference to title input, of class {@link EditText}
      */
     EditText titleText;
     /**
-     *
+     *Reference to reason input, of class {@link EditText}
      */
     EditText reasonText;
     /**
-     *
+     *Reference to date input, of class {@link TextView}
      */
     TextView startDateText;
     /**
-     *
+     *Reference to weekdays input, of class {@link WeekdaysPicker}
      */
     WeekdaysPicker weekdaysPicker;
     /**
-     *
+     *Reference to the confirm button, of class {@link Button}
      */
     Button confirm;
     /**
-     *
+     *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
 
     /**
-     *
-     * @param savedInstanceState
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,13 @@ public class AddHabitActivity extends AppCompatActivity {
 
         weekdaysPicker.setSelected(true);
 
+        String pattern = "yyyy-MM-dd";
+        Date today = Calendar.getInstance().getTime();
+        DateFormat df = new SimpleDateFormat(pattern);
+        String todayAsString = df.format(today);
+        startDateText.setText(todayAsString);
+
+
         startDateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +107,16 @@ public class AddHabitActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                startDateText.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                String selectDayString = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                                Date selectDay = new Date();
+                                try {
+                                    selectDay = new SimpleDateFormat("yyyy-MM-dd")
+                                            .parse(selectDayString);
+                                } catch (ParseException e){
+                                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                                startDateText.setText(new SimpleDateFormat("yyyy-MM-dd").format(selectDay));
                             }
                         }, year, month, day);
                 picker.show();
@@ -161,9 +179,9 @@ public class AddHabitActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param item
-     * @return
+     *This is the method invoked when the back in menu is pressed
+     * @param item used for its super class
+     * @return the result of its super selecting the same option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -174,5 +192,4 @@ public class AddHabitActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

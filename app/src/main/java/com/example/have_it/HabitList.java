@@ -14,22 +14,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- *
+ *This is the list of {@link Habit}, extends {@link ArrayAdapter} of {@link Habit}
+ * @author yulingshen
  */
 public class HabitList extends ArrayAdapter<Habit> {
     /**
-     *
+     *This is the array list for habit data, of class {@link ArrayList}
      */
     private ArrayList<Habit> habits;
     /**
-     *
+     *This is the current context, of class {@link Context}
      */
     private Context context;
 
     /**
-     *
-     * @param context
-     * @param habits
+     *This is the contstructor of {@link HabitList}
+     * @param context @see context, {@link Context}, give the context
+     * @param habits @see habits, {@link ArrayList}, give the habit data
      */
     public HabitList( Context context, ArrayList<Habit> habits) {
         super(context, 0, habits);
@@ -38,7 +39,7 @@ public class HabitList extends ArrayAdapter<Habit> {
     }
 
     /**
-     *
+     *This method is invoked when a list of habits is to be shown in {@link HabitPageActivity}
      * @param position
      * @param convertView
      * @param parent
@@ -58,10 +59,10 @@ public class HabitList extends ArrayAdapter<Habit> {
     }
 
     /**
-     *
-     * @return
+     *The method for getting a habit list of the habits to be done today
+     * This is expected to be called by {@link HabitPageActivity}
+     * @return {@link ArrayList} The habit list for today
      */
-    //The method for getting a habit list of the habits to be done today
     public ArrayList<Habit> getTodayHabits(){
         ArrayList<Habit> result = new ArrayList<Habit>();
         Calendar calendar = Calendar.getInstance();

@@ -105,7 +105,16 @@ public class ViewEditEventActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateText.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                String selectDayString = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                                Date selectDay = new Date();
+                                try {
+                                    selectDay = new SimpleDateFormat("yyyy-MM-dd")
+                                            .parse(selectDayString);
+                                } catch (ParseException e){
+                                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                                dateText.setText(new SimpleDateFormat("yyyy-MM-dd").format(selectDay));
                             }
                         }, year, month, day);
                 picker.show();

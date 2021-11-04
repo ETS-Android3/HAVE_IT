@@ -56,10 +56,10 @@ public class EventList extends ArrayAdapter<Event> {
             view = LayoutInflater.from(context).inflate(R.layout.event_list_content, parent,false);
         }
         Event event = events.get(position);
-        TextView habitName = view.findViewById(R.id.event_title);
-        String date_event=event.getDate()+"/"+event.getEvent();
-
-        habitName.setText(date_event);
+        TextView eventName = view.findViewById(R.id.event_title);
+        TextView eventDate = view.findViewById(R.id.event_date);
+        eventName.setText(event.getEvent());
+        eventDate.setText(event.getDate());
         return view;
     }
 }

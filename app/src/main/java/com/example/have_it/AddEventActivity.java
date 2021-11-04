@@ -78,6 +78,10 @@ public class AddEventActivity extends AppCompatActivity {
         dateText = findViewById(R.id.date);
         addEvent = findViewById(R.id.addevent_button);
 
+        Date today = Calendar.getInstance().getTime();
+        String todayAsString = new SimpleDateFormat("yyyy-MM-dd").format(today);
+        dateText.setText(todayAsString);
+
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +94,16 @@ public class AddEventActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                dateText.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                String selectDayString = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                                Date selectDay = new Date();
+                                try {
+                                    selectDay = new SimpleDateFormat("yyyy-MM-dd")
+                                            .parse(selectDayString);
+                                } catch (ParseException e){
+                                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                                dateText.setText(new SimpleDateFormat("yyyy-MM-dd").format(selectDay));
                             }
                         }, year, month, day);
                 picker.show();

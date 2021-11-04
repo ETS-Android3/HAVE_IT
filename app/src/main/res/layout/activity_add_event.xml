@@ -10,18 +10,16 @@
         android:id="@+id/event_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="64dp"
         android:ems="10"
-        android:hint="Event"
+        android:hint="Event comment"
         android:inputType="none"
         android:maxLength="20"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13">
+        app:layout_constraintTop_toTopOf="parent">
 
     </EditText>
 
@@ -29,16 +27,16 @@
         android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="348dp"
+        android:layout_marginTop="64dp"
         android:ems="10"
         android:hint=" date"
         android:inputType="date"
         android:minHeight="48dp"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/addevent_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_editText"
         tools:ignore="MissingConstraints">
 
     </TextView>
