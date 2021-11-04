@@ -40,49 +40,50 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ *This is the activity for editing or delete a  habit
+ * @author ruiqingtian
  */
 public class ViewEditHabitActivity extends AppCompatActivity {
     /**
-     *
+     *A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
     /**
-     *
+     *Reference to title input, of class {@link EditText}
      */
     EditText titleText;
     /**
-     *
+     *Reference to reason input, of class {@link EditText}
      */
     EditText reasonText;
     /**
-     *
+     *Reference to date input, of class {@link TextView}
      */
     TextView startDateText;
     /**
-     *
+     *Reference to weekdays input, of class {@link WeekdaysPicker}
      */
     WeekdaysPicker weekdaysPicker;
     /**
-     *
+     *Reference to the confirm button, of class {@link Button}
      */
     Button confirm;
     /**
-     *
+     *Reference to the delete button, of class {@link Button}
      */
     Button delete;
     /**
-     *
+     *event list, of class {@link ArrayList}
      */
     Button eventList;
     /**
-     *
+     *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
 
     /**
-     *
-     * @param savedInstanceState
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -360,9 +361,9 @@ public class ViewEditHabitActivity extends AppCompatActivity {
     }
 
     /**
-     * 
-     * @param item
-     * @return
+     *This is the method invoked when the back in menu is pressed
+     * @param item used for its super class
+     * @return the result of its super selecting the same option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
