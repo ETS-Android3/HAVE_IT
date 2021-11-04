@@ -20,7 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
- *
+ * User_RegisterActivity represent all the activities happened on register page.
+ * @author Jianbang Chen,Yuling Shen
+ * @see User_RegisterActivity
+ * @version 1.2
  */
 public class User_RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     /**
@@ -64,7 +67,7 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     *
+     * This class handle user clicking text view and register button.
      * @param view
      */
     @Override
@@ -81,6 +84,9 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * This method storing the user email, password and fullName inputs.
+     * Also, checking the validity of all the user input information with
+     * notifications.
      *
      */
     private void registerUser() {
@@ -139,6 +145,8 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
 //                                    progressBar.setVisibility(View.GONE);
 //                                }
 //                            });
+                            FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
+                            Toast.makeText(User_RegisterActivity.this, "registered, check your email to verify your account!", Toast.LENGTH_LONG).show();
                             finish();
                         }else{
                             Toast.makeText(User_RegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
