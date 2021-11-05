@@ -29,7 +29,7 @@
                 android:value=".UserLoginActivity" />
         </activity>
         <activity
-            android:name=".User_RegisterActivity"
+            android:name=".UserRegisterActivity"
             android:exported="true"
             android:parentActivityName=".UserLoginActivity">
 

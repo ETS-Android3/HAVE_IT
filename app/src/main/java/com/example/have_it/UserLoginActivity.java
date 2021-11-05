@@ -22,29 +22,29 @@ import com.google.firebase.auth.FirebaseUser;
 /**
  * UserLoginActivity represent all the activities happened at user login page.
  * @author Jianbang Chen,Yuling Shen
- * @see User_RegisterActivity,ForgotPasswordActivity
+ * @see UserRegisterActivity ,ForgotPasswordActivity
  * @version 1.2
  *
  */
 public class UserLoginActivity extends AppCompatActivity implements View.OnClickListener  {
     /**
-     *
+     *Reference to the textview of register and forgot password , of class {@link TextView}
      */
     private TextView register,forgotPassword;
     /**
-     *
+     *Reference to the email user input and password user input, of class {@link EditText}
      */
     private EditText editTextEmail, editTextPassword;
     /**
-     *
+     *Reference to the sign in button, of class {@link Button}
      */
     private Button signIn;
     /**
-     *
+     *A reference to firebase Authentication, of class {@link FirebaseAuth}
      */
     private FirebaseAuth mAuth;
     /**
-     *
+     *A reference to show progress sign, of class {@link ProgressBar}
      */
     private ProgressBar progressBar;
 
@@ -83,7 +83,7 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v){
         switch (v.getId()){
             case R.id.register:
-                startActivity(new Intent(this, User_RegisterActivity.class));
+                startActivity(new Intent(this, UserRegisterActivity.class));
                 break;
             case R.id.signIn:
                 userLogin();

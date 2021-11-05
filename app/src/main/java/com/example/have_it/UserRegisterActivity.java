@@ -17,29 +17,28 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * User_RegisterActivity represent all the activities happened on register page.
  * @author Jianbang Chen,Yuling Shen
- * @see User_RegisterActivity
+ * @see UserRegisterActivity
  * @version 1.2
  */
-public class User_RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserRegisterActivity extends AppCompatActivity implements View.OnClickListener {
     /**
-     *
+     *A reference to firebase Authentication, of class {@link FirebaseAuth}
      */
     private FirebaseAuth mAuth;
     /**
-     *
+     *A text view to show banner and register button, of class {@link TextView}
      */
     private TextView banner, registerUser;
     /**
-     *
+     *Reference of user full name, email address, password inputs, of class {@link EditText}
      */
     private EditText editTextFullName, editTextEmail, editTextPassword;
     /**
-     *
+     *A reference to show progress sign, of class {@link ProgressBar}
      */
     private ProgressBar progressBar;
 
@@ -146,10 +145,10 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
 //                                }
 //                            });
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
-                            Toast.makeText(User_RegisterActivity.this, "registered, check your email to verify your account!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(UserRegisterActivity.this, "registered, check your email to verify your account!", Toast.LENGTH_LONG).show();
                             finish();
                         }else{
-                            Toast.makeText(User_RegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
+                            Toast.makeText(UserRegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
