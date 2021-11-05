@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  *This is the list of {@link Habit}, extends {@link ArrayAdapter} of {@link Habit}
@@ -56,6 +57,10 @@ public class HabitList extends ArrayAdapter<Habit> {
         TextView habitName = view.findViewById(R.id.habit_title);
         habitName.setText(habit.getTitle());
         return view;
+    }
+
+    public List<Habit> getHabits(){
+        return habits;
     }
 
     /**

@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -39,6 +40,10 @@ public class EventList extends ArrayAdapter<Event> {
         super(context, 0, events);
         this.events = events;
         this.context = context;
+    }
+
+    public List<Event> getEvents(){
+       return events;
     }
 
     /**
