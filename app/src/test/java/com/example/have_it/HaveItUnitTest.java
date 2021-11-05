@@ -3,8 +3,10 @@ package com.example.have_it;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -13,16 +15,18 @@ public class HaveItUnitTest {
     private HabitList tempHabList;
     Habit testHabit;
 
-/*    // mockHablist and mockHabit creates a resuable HabitList
+    // mockHablist and mockHabit creates a resuable HabitList
     private ArrayList<Boolean> weekday = new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false));
     private Habit mockHabit(){
-        return new Habit("brush teeth", "because I want to", new Date("2021-11-14"), weekday);
+
+
+        return new Habit("brush teeth", "because I want to", Calendar.getInstance().getTime(), weekday);
     }
 
     private HabitList mockHabList(){
         HabitList habitList = new HabitList(null, new ArrayList<Habit>(Arrays.asList(mockHabit())));
         return habitList;
-    }*/
+    }
 
     // mockEvent and mock EventList creates a reusable EventList
     private Event mockEvent(){
@@ -50,7 +54,7 @@ public class HaveItUnitTest {
         assertEquals("2021-5-6", testEvent.getDate());
     }
 
-/*    @Test
+    @Test
     public void TestGetTodayHabit(){
         tempHabList = mockHabList();
         assertEquals(1, tempHabList.getHabits().size());
@@ -61,7 +65,7 @@ public class HaveItUnitTest {
         tempHabList = mockHabList();
         tempHabList.getHabits().add(mockHabit());
         assertEquals(2, tempHabList.getHabits().size());
-    }*/
+    }
 
 
     // this is just a pointer for our Eventlist, we will use it shortly
