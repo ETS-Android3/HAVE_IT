@@ -18,22 +18,23 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- *
+ *This is the list of {@link Event}, extends {@link ArrayAdapter} of {@link Event}
+ * @author songkunguo
  */
 public class EventList extends ArrayAdapter<Event> {
     /**
-     *
+     *This is the array list for event data, of class {@link ArrayList}
      */
     private ArrayList<Event> events;
     /**
-     *
+     *This is the current context, of class {@link Context}
      */
     private Context context;
 
     /**
-     *
-     * @param context
-     * @param events
+     *This is the contstructor of {@link EventList}
+     * @param context @see context, {@link Context}, give the context
+     * @param events @see habits, {@link ArrayList}, give the event data
      */
     public EventList( Context context, ArrayList<Event> events) {
         super(context, 0, events);
@@ -42,7 +43,7 @@ public class EventList extends ArrayAdapter<Event> {
     }
 
     /**
-     *
+     *This method is invoked when a list of events is to be shown in {@link EventPageActivity}
      * @param position
      * @param convertView
      * @param parent

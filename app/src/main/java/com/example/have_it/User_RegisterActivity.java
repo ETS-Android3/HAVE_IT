@@ -20,7 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
- *
+ * User_RegisterActivity represent all the activities happened on register page.
+ * @author Jianbang Chen,Yuling Shen
+ * @see User_RegisterActivity
+ * @version 1.2
  */
 public class User_RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     /**
@@ -64,7 +67,7 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     *
+     * This class handle user clicking text view and register button.
      * @param view
      */
     @Override
@@ -81,9 +84,13 @@ public class User_RegisterActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
+     * This method storing the user email, password and fullName inputs.
+     * Also, checking the validity of all the user input information with
+     * notifications.
      *
      */
     private void registerUser() {
+
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String fullName = editTextFullName.getText().toString().trim();

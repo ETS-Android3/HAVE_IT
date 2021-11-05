@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/ruiqi/OneDrive/Desktop/Main/HAVE_IT/app/src/main/res/layout/activity_view_edit_habit.xml" value="0.264" />
+        <entry key="..\:/Users/ruiqi/OneDrive/Desktop/Main/HAVE_IT/app/src/main/res/layout/indicator_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_add_event.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/activity_add_habit.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_event_page.xml" value="0.2359375" />

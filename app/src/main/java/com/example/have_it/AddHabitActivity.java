@@ -13,14 +13,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dpro.widgets.WeekdaysPicker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -65,6 +73,7 @@ public class AddHabitActivity extends AppCompatActivity {
      *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
+    Boolean titleExist = true;
 
     /**
      *This is the method invoked when the activity starts
@@ -148,31 +157,53 @@ public class AddHabitActivity extends AppCompatActivity {
 
                 HashMap<String, Object> data = new HashMap<>();
 
+
+
                 if (title.length()>0){
                     data.put("title", title);
                     data.put("reason", reason);
                     data.put("dateStart", startDateTimestamp);
                     data.put("weekdayReg", weekdayReg);
 
-                    habitListReference
-                            .document(title)
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // These are a method which gets executed when the task is succeeded
-                                    Log.d("Adding Habit", "Habit data has been added successfully!");
-                                    finish();
+
+
+
+
+                    habitListReference.document(title).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+
+                                    Toast.makeText(getApplicationContext(),"cannot add because the habit is exist", Toast.LENGTH_LONG).show();
+                                } else {
+
+
+                                    habitListReference
+                                            .document(title)
+                                            .set(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // These are a method which gets executed when the task is succeeded
+                                                    Log.d("Adding Habit", "Habit data has been added successfully!");
+                                                    finish();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // These are a method which gets executed if there’s any problem
+                                                    Log.d("Adding Habit", "Habit data could not be added!" + e.toString());
+                                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // These are a method which gets executed if there’s any problem
-                                    Log.d("Adding Habit", "Habit data could not be added!" + e.toString());
-                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            }
+                        }
+                    });
+
                 }
             }
         });

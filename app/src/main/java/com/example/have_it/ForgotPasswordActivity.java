@@ -16,7 +16,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- *
+ * ForgotPasswordActivity represent all the activities happened on password reset page.
+ *  @author Jianbang Chen,Yuling Shen
+ *  @see User
+ *  @version 1.2
  */
 public class ForgotPasswordActivity extends AppCompatActivity {
     /**
@@ -37,7 +40,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     FirebaseAuth auth;
 
     /**
-     *
+     * connect all the layout id with their own variables.
      * @param savedInstanceState
      */
     @Override
@@ -60,7 +63,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * The method store the user input reset email address.
+     * Checking the validity of reset email address.
+     * Send the reset email to the user email address.
      */
     private void resetPassword (){
         String email = emailEditText.getText().toString().trim();

@@ -17,8 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dpro.widgets.WeekdaysPicker;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,37 +36,38 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ *This is the activity for edit or delete event
+ * @author songkunguo
  */
 public class ViewEditEventActivity extends AppCompatActivity {
     /**
-     *
+     *A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
     /**
-     *
+     *Reference to event input, of class {@link EditText}
      */
     EditText eventText;
     /**
-     *
+     *Reference to date input, of class {@link EditText}
      */
     TextView dateText;
     /**
-     *
+     *Reference to the confirm button, of class {@link Button}
      */
     Button confirm;
     /**
-     *
+     *Reference to the delete button, of class {@link Button}
      */
     Button delete;
     /**
-     *
+     *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
 
     /**
-     *
-     * @param savedInstanceState
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,51 +165,67 @@ public class ViewEditEventActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Not valid date", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    EventListReference.document(dateText.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
 
-                    EventListReference.document(selected_event_date)
-                            .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("Delete event", "event data has been deleted successfully!");
+                                    Toast.makeText(getApplicationContext(),"cannot add because the date is exist", Toast.LENGTH_LONG).show();
+                                } else {
 
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("Delete event", "Error deleting document", e);
-                                }
-                            });
 
-                    EventListReference
-                            .document(dateText.getText().toString())
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // These are a method which gets executed when the task is succeeded
-                                    Log.d("Adding event", "event data has been edited successfully!");
-                                    finish();
+                                    EventListReference.document(selected_event_date)
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("Delete event", "event data has been deleted successfully!");
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("Delete event", "Error deleting document", e);
+                                                }
+                                            });
+
+                                    EventListReference
+                                            .document(dateText.getText().toString())
+                                            .set(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // These are a method which gets executed when the task is succeeded
+                                                    Log.d("Adding event", "event data has been edited successfully!");
+                                                    finish();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // These are a method which gets executed if there’s any problem
+                                                    Log.d("Adding event", "Habit data could not be edited!" + e.toString());
+                                                    Toast.makeText(getApplicationContext(),"Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // These are a method which gets executed if there’s any problem
-                                    Log.d("Adding event", "Habit data could not be edited!" + e.toString());
-                                    Toast.makeText(getApplicationContext(),"Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            }
+                        }
+                    });
+
+
                 }
             }
         });
     }
 
     /**
-     *
-     * @param item
-     * @return
+     *This is the method invoked when the back in menu is pressed
+     * @param item used for its super class
+     * @return the result of its super selecting the same option
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
