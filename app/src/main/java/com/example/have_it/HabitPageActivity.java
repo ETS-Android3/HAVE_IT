@@ -75,9 +75,9 @@ public class HabitPageActivity extends AppCompatActivity {
         habitList = findViewById(R.id.all_habit_list);
         todayHabitList = findViewById(R.id.today_habit_list);
 
-        final FloatingActionButton addCityButton = findViewById(R.id.add_habit_button);
+        final FloatingActionButton addHabitButton = findViewById(R.id.add_habit_button);
         final Intent addHabitIntent = new Intent(this, AddHabitActivity.class);
-        addCityButton.setOnClickListener(new View.OnClickListener() {
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(addHabitIntent);
