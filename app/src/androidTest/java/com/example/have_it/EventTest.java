@@ -109,6 +109,11 @@ public class EventTest {
         solo.clickOnView(solo.getView(R.id.delete_button));
 
         assertFalse(solo.searchText("I did it yeah!"));
+        solo.clickOnView(solo.getView(R.id.back_button));
+        solo.sleep(1000);
+        solo.clickOnView(solo.getView(R.id.delete_button));
+        solo.sleep(1000);
+
 
     }
 }

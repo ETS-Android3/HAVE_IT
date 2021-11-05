@@ -77,7 +77,7 @@ public class IndicatorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_indicator);
 
         Intent i = getIntent();
-        backButton = findViewById(R.id.backButton);
+        backButton = findViewById(R.id.backButton1);
 
         //connect the compact calendar view in layout
         simpleCalendarView = (CompactCalendarView) findViewById(R.id.simpleCalendarView);

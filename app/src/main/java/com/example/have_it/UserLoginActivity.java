@@ -101,7 +101,8 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
     private void userLogin() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-
+//        String email ="ruiqing2@ualberta.ca";
+//        String password = "trq991007";
         if(email.isEmpty()){
             editTextEmail.setError("Email address is required!");
             editTextEmail.requestFocus();

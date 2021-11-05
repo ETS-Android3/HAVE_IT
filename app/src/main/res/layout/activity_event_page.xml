@@ -42,7 +42,11 @@ reference: https://stackoverflow.com/questions/16748872/height-half-fill-parent-
         android:focusable="true"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="249dp"
+        android:layout_height="wrap_content"
+        android:text="back" />
 
 
 </LinearLayout>

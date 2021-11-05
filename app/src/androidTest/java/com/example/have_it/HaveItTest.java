@@ -144,7 +144,7 @@ public class HaveItTest {
 
 
     @Test
-    public void checkEditHabit(){
+    public void checkEditHabitIndicator(){
         solo.assertCurrentActivity("Wrong", UserLoginActivity.class);
         solo.enterText((EditText)solo.getView(R.id.email),
                 "allenhonggod@gmail.com");
@@ -171,6 +171,12 @@ public class HaveItTest {
 
         solo.assertCurrentActivity("Wrong", HabitPageActivity.class);
         solo.clickInList(1,1);
+        solo.clickOnView(solo.getView(R.id.indicator_button));
+
+        solo.assertCurrentActivity("Wrong", IndicatorActivity.class);
+
+        solo.clickOnView(solo.getView(R.id.backButton1));
+        solo.assertCurrentActivity("Wrong", ViewEditHabitActivity.class);
 
         // we already checked that everything is there so we are not going to check again
         // now we just change everything first then check if it is right
@@ -201,5 +207,6 @@ public class HaveItTest {
         solo.clickOnView(solo.getView(R.id.delete_button));
 
     }
+
 
 }

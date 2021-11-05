@@ -31,6 +31,10 @@ public class EventPageActivity extends AppCompatActivity {
      */
     FloatingActionButton addEvent;
     /**
+     *Reference to the backButton, of class {@link Button}
+     */
+     Button backButton2;
+    /**
      *A reference to all event list view, of class {@link ListView}
      */
     ListView eventList;
@@ -56,6 +60,7 @@ public class EventPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_page);
         addEvent = findViewById(R.id.add_event_button);
+        backButton2 = findViewById(R.id.back_button);
         Intent i = getIntent();
         String selectedTitle = i.getStringExtra("habit");
         eventList = findViewById(R.id.all_event_list);
@@ -101,6 +106,12 @@ public class EventPageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 addEventIntent.putExtra("habit", selectedTitle);
                 startActivity(addEventIntent);
+            }
+        });
+        backButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }
