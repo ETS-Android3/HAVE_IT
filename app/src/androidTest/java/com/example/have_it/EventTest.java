@@ -36,7 +36,7 @@ public class EventTest {
 
 
     @Test
-    public void checkAddingandEditingEvent(){
+    public void checkAddingEditingEvent(){
         //login in first
         solo.assertCurrentActivity("Wrong", UserLoginActivity.class);
         solo.enterText((EditText)solo.getView(R.id.email),
@@ -107,8 +107,11 @@ public class EventTest {
         //open again and delete it
         solo.clickInList(1);
         solo.clickOnView(solo.getView(R.id.delete_button));
-
+        solo.sleep(1000);
         assertFalse(solo.searchText("I did it yeah!"));
 
+        //go back to delete the testing habit
+        solo.goBack();
+        solo.clickOnView(solo.getView(R.id.delete_button));
     }
 }

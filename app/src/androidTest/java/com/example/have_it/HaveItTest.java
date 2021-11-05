@@ -144,7 +144,7 @@ public class HaveItTest {
 
 
     @Test
-    public void checkEditHabit(){
+    public void checkEditHabitWithIndicatorViewTesting(){
         solo.assertCurrentActivity("Wrong", UserLoginActivity.class);
         solo.enterText((EditText)solo.getView(R.id.email),
                 "allenhonggod@gmail.com");
@@ -172,8 +172,14 @@ public class HaveItTest {
         solo.assertCurrentActivity("Wrong", HabitPageActivity.class);
         solo.clickInList(1,1);
 
+        //this is to be testing that the visual indicator can be accessed
+        solo.clickOnView(solo.getView(R.id.indicator_button));
+        solo.assertCurrentActivity("Wrong", IndicatorActivity.class);
+        solo.goBack();
+
         // we already checked that everything is there so we are not going to check again
         // now we just change everything first then check if it is right
+        solo.sleep(1000);
         solo.clearEditText((EditText)solo.getView(R.id.habit_title_editText_viewedit));
         solo.clearEditText((EditText)solo.getView(R.id.habit_reason_editText_viewedit));
         solo.enterText((EditText)solo.getView(R.id.habit_title_editText_viewedit),
@@ -201,5 +207,4 @@ public class HaveItTest {
         solo.clickOnView(solo.getView(R.id.delete_button));
 
     }
-
 }

@@ -47,11 +47,6 @@ public class IndicatorActivity extends AppCompatActivity {
     CompactCalendarView simpleCalendarView;
 
     /**
-     * A reference to go back button, of class {@link Button}
-     */
-    Button backButton;
-
-    /**
      * A reference to firestore database, of class {@link FirebaseFirestore}
      */
     FirebaseFirestore db;
@@ -77,7 +72,6 @@ public class IndicatorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_indicator);
 
         Intent i = getIntent();
-        backButton = findViewById(R.id.backButton);
 
         //connect the compact calendar view in layout
         simpleCalendarView = (CompactCalendarView) findViewById(R.id.simpleCalendarView);
@@ -86,7 +80,7 @@ public class IndicatorActivity extends AppCompatActivity {
         //Adding an title on the action bar
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(dateFormatMonth.format(new Date()));
         }
 
@@ -101,7 +95,10 @@ public class IndicatorActivity extends AppCompatActivity {
         String selectedHabit = i.getStringExtra("habit");
 
         //Access the data in firebase through habit selected title
-        habitListReference.document(selectedHabit).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        habitListReference
+                .document(selectedHabit)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot doc) {
                 Timestamp startTimestamp = (Timestamp) doc.getData().get("dateStart");
@@ -191,7 +188,8 @@ public class IndicatorActivity extends AppCompatActivity {
         });
 
 
-        simpleCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+        simpleCalendarView
+                .setListener(new CompactCalendarView.CompactCalendarViewListener() {
             //Used for one specific date is clicked
             @Override
             public void onDayClick(Date dateClicked) {
@@ -206,14 +204,6 @@ public class IndicatorActivity extends AppCompatActivity {
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
 
-            }
-        });
-
-        //back button is used to go back to ViewEditActivity
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
             }
         });
     }
