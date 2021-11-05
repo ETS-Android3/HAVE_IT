@@ -114,31 +114,29 @@ public class HabitPageActivity extends AppCompatActivity {
                 }
                 habitAdapter.notifyDataSetChanged();
                 todayHabitDataList.clear();
-                ArrayList<Habit> today_temp = habitAdapter.getTodayHabits();
-                for (Habit each : today_temp){
+                ArrayList<Habit> todayTemp = habitAdapter.getTodayHabits();
+                for (Habit each : todayTemp){
                     todayHabitDataList.add(each);
                 }
                 todayHabitAdapter.notifyDataSetChanged();
             }
         });
 
-        final Intent view_editHabitIntent = new Intent(this, ViewEditHabitActivity.class);
+        final Intent viewEditHabitIntent = new Intent(this, ViewEditHabitActivity.class);
         habitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-//                view_editHabitIntent.putExtra(EXTRA_MESSAGE, habitDataList.get(position));
-                view_editHabitIntent.putExtra("habit", habitDataList.get(position).getTitle());
+                viewEditHabitIntent.putExtra("habit", habitDataList.get(position).getTitle());
 
-                startActivity(view_editHabitIntent);
+                startActivity(viewEditHabitIntent);
             }
         });
         todayHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-//                view_editHabitIntent.putExtra(EXTRA_MESSAGE, habitDataList.get(position));
-                view_editHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
+                viewEditHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
 
-                startActivity(view_editHabitIntent);
+                startActivity(viewEditHabitIntent);
             }
         });
     }

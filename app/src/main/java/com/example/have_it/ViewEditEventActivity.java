@@ -73,18 +73,18 @@ public class ViewEditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_edit_event);
         db = FirebaseFirestore.getInstance();
         Intent i = getIntent();
-        String selected_event_date = i.getStringExtra("event_date");
-        String selected_habit = i.getStringExtra("habit");
+        String selectedEventDate = i.getStringExtra("event_date");
+        String selectedHabit = i.getStringExtra("habit");
 
         User logged = User.getInstance();
-        final CollectionReference EventListReference = db.collection("Users")
-                .document(logged.getUID()).collection("HabitList").document(selected_habit).collection("Eventlist");
+        final CollectionReference eventListReference = db.collection("Users")
+                .document(logged.getUID()).collection("HabitList").document(selectedHabit).collection("Eventlist");
         eventText = findViewById(R.id.event_editText_viewedit);
         dateText = findViewById(R.id.event_date_viewedit);
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
 
-        EventListReference.document(selected_event_date).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        eventListReference.document(selectedEventDate).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 eventText.setText((String)documentSnapshot.getData().get("event"));
@@ -126,7 +126,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Toast.makeText( getApplicationContext(),  selected_event_date, Toast.LENGTH_SHORT).show();
-                EventListReference.document(selected_event_date)
+                eventListReference.document(selectedEventDate)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -164,7 +164,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
                         return;
                     }
 
-                    EventListReference.document(selected_event_date)
+                    eventListReference.document(selectedEventDate)
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -180,7 +180,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
                                 }
                             });
 
-                    EventListReference
+                    eventListReference
                             .document(dateText.getText().toString())
                             .set(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {

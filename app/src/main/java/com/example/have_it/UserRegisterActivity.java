@@ -126,24 +126,6 @@ public class UserRegisterActivity extends AppCompatActivity implements View.OnCl
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if(task.isSuccessful()){
-//                            User user = new User(fullName,email);
-//                            FirebaseDatabase.getInstance().getReference("Users")
-//                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if(task.isSuccessful()){
-//                                        Toast.makeText(User_RegisterActivity.this,"User has been registered successfully!",Toast.LENGTH_LONG).show();
-//
-//                                        //redirect to login layout
-//                                        //startActivity(new Intent(User_RegisterActivity.this, UserLoginActivity.class));
-//                                        finish();
-//                                    }else{
-//                                        Toast.makeText(User_RegisterActivity.this,"Failed to register! Try again!",Toast.LENGTH_LONG).show();
-//                                    }
-//                                    progressBar.setVisibility(View.GONE);
-//                                }
-//                            });
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
                             Toast.makeText(UserRegisterActivity.this, "registered, check your email to verify your account!", Toast.LENGTH_LONG).show();
                             finish();

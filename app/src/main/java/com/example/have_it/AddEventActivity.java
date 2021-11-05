@@ -69,11 +69,11 @@ public class AddEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_event);
         db = FirebaseFirestore.getInstance();
         Intent i = getIntent();
-        String selected_title = i.getStringExtra("habit");
+        String selectedTitle = i.getStringExtra("habit");
         User logged = User.getInstance();
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
-                .document(selected_title).collection("Eventlist");
+                .document(selectedTitle).collection("Eventlist");
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
@@ -114,7 +114,7 @@ public class AddEventActivity extends AppCompatActivity {
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),selected_title, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),selectedTitle, Toast.LENGTH_LONG).show();
                 final String event = eventText.getText().toString();
                 HashMap<String, Object> data = new HashMap<>();
 

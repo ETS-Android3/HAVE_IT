@@ -60,10 +60,10 @@ public class EventPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_page);
         addEvent = findViewById(R.id.add_event_button);
         Intent i = getIntent();
-        String selected_title = i.getStringExtra("habit");
+        String selectedTitle = i.getStringExtra("habit");
         eventList = findViewById(R.id.all_event_list);
 
-        final Intent addeventIntent = new Intent(this, AddEventActivity.class);
+        final Intent addEventIntent = new Intent(this, AddEventActivity.class);
         eventDataList = new ArrayList<>();
         eventAdapter = new EventList(this, eventDataList);
         eventList.setAdapter(eventAdapter);
@@ -72,7 +72,7 @@ public class EventPageActivity extends AppCompatActivity {
         User logged = User.getInstance();
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
-                .document(selected_title).collection("Eventlist");
+                .document(selectedTitle).collection("Eventlist");
 
         eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -88,13 +88,13 @@ public class EventPageActivity extends AppCompatActivity {
                 eventAdapter.notifyDataSetChanged();
             }
         });
-        final Intent view_editEventIntent = new Intent(this, ViewEditEventActivity.class);
+        final Intent viewEditEventIntent = new Intent(this, ViewEditEventActivity.class);
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                view_editEventIntent.putExtra("event_date", eventDataList.get(position).getDate());
-                view_editEventIntent.putExtra("habit", selected_title);
-                startActivity(view_editEventIntent);
+                viewEditEventIntent.putExtra("event_date", eventDataList.get(position).getDate());
+                viewEditEventIntent.putExtra("habit", selectedTitle);
+                startActivity(viewEditEventIntent);
             }
 
         });
@@ -102,8 +102,8 @@ public class EventPageActivity extends AppCompatActivity {
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addeventIntent.putExtra("habit", selected_title);
-                startActivity(addeventIntent);
+                addEventIntent.putExtra("habit", selectedTitle);
+                startActivity(addEventIntent);
             }
         });
     }

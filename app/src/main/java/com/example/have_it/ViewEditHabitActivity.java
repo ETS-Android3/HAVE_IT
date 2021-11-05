@@ -101,16 +101,16 @@ public class ViewEditHabitActivity extends AppCompatActivity {
         eventList = findViewById(R.id.event_list_button);
 
         Intent i = getIntent();
-        String selected_title = i.getStringExtra("habit");
+        String selectedTitle = i.getStringExtra("habit");
 
         User logged = User.getInstance();
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
 
-        habitListReference.document(selected_title).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        habitListReference.document(selectedTitle).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                titleText.setText(selected_title);
+                titleText.setText(selectedTitle);
                 reasonText.setText((String) documentSnapshot.getData().get("reason"));
                 SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd");
                 startDateText.setText(spf.format(((Timestamp) documentSnapshot.getData().get("dateStart")).toDate()));
@@ -158,7 +158,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
 
         final CollectionReference EventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
-                .document(selected_title).collection("Eventlist");
+                .document(selectedTitle).collection("Eventlist");
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,8 +192,8 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                     data.put("dateStart", startDateTimestamp);
                     data.put("weekdayReg", weekdayReg);
 
-                    if (title.equals(selected_title)) {
-                        habitListReference.document(selected_title)
+                    if (title.equals(selectedTitle)) {
+                        habitListReference.document(selectedTitle)
                                 .update(data)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -238,14 +238,13 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                                     event.put("date", doc.getData().get("date"));
                                     event.put("event", doc.getData().get("event"));
 
-                                    habitListReference.document(selected_title).collection("Eventlist")
+                                    habitListReference.document(selectedTitle).collection("Eventlist")
                                             .document((String) doc.getData().get("date"))
                                             .delete()
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d("Delete event", "event data has been deleted successfully!");
-
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -264,7 +263,6 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                                                 public void onSuccess(Void aVoid) {
                                                     // These are a method which gets executed when the task is succeeded
                                                     Log.d("Adding event", "Habit data has been edited successfully!");
-
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
@@ -275,12 +273,10 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                                                     Toast.makeText(getApplicationContext(), "Not being able to edit data, please check duplication title", Toast.LENGTH_LONG).show();
                                                 }
                                             });
-
-
                                 }
                             }
                         });
-                        habitListReference.document(selected_title)
+                        habitListReference.document(selectedTitle)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -295,22 +291,16 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                                         Log.w("Delete Habit", "Error deleting document", e);
                                     }
                                 });
-
-
-
                     }
                 }
             }
         });
 
-
-
-
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                habitListReference.document(selected_title)
+                habitListReference.document(selectedTitle)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -334,16 +324,10 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                             String date = (String) doc.getData().get("date");
                             EventListReference.document(date)
                                     .delete();
-
                         }
-
-
                     }
                 });
-
                 finish();
-
-
             }
         });
 
@@ -352,9 +336,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
         eventList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eventListIntent.putExtra("habit", selected_title);
-                // Toast.makeText( getApplicationContext(),  selected_title, Toast.LENGTH_SHORT).show();
-
+                eventListIntent.putExtra("habit", selectedTitle);
                 startActivity(eventListIntent);
             }
         });
@@ -374,7 +356,4 @@ public class ViewEditHabitActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
