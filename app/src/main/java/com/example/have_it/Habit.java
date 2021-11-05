@@ -3,7 +3,6 @@ package com.example.have_it;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.io.Serializable;
 
 /**
  *This is the class for managing the information of habit

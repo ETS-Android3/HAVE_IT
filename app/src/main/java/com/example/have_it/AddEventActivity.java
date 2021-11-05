@@ -1,9 +1,5 @@
 package com.example.have_it;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,22 +12,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dpro.widgets.WeekdaysPicker;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *This is the activity for adding a new event
@@ -73,7 +69,7 @@ public class AddEventActivity extends AppCompatActivity {
         User logged = User.getInstance();
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
-                .document(selectedTitle).collection("Eventlist");
+                .document(selectedTitle).collection("EventList");
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
@@ -114,7 +110,7 @@ public class AddEventActivity extends AppCompatActivity {
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),selectedTitle, Toast.LENGTH_LONG).show();
+
                 final String event = eventText.getText().toString();
                 HashMap<String, Object> data = new HashMap<>();
 
@@ -130,26 +126,37 @@ public class AddEventActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
                         return;
                     }
-
-                    eventListReference
-                            .document(dateText.getText().toString())
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // These are a method which gets executed when the task is succeeded
-                                    Log.d("Adding event", "event data has been added successfully!");
-                                    finish();
+                    eventListReference.document(dateText.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Toast.makeText(getApplicationContext(),"cannot add event: another event at the same day", Toast.LENGTH_LONG).show();
+                                } else {
+                                    eventListReference
+                                            .document(dateText.getText().toString())
+                                            .set(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // These are a method which gets executed when the task is succeeded
+                                                    Log.d("Adding event", "event data has been added successfully!");
+                                                    finish();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // These are a method which gets executed if there’s any problem
+                                                    Log.d("Adding event", "Habit event could not be added!" + e.toString());
+                                                    Toast.makeText(getApplicationContext(),"Not being able to add data", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // These are a method which gets executed if there’s any problem
-                                    Log.d("Adding event", "Habit event could not be added!" + e.toString());
-                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            }
+                        }
+                    });
                 }
             }
         });

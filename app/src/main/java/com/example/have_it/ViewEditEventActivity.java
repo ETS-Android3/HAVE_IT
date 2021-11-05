@@ -1,9 +1,5 @@
 package com.example.have_it;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,22 +12,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dpro.widgets.WeekdaysPicker;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *This is the activity for edit or delete event
@@ -78,7 +74,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
 
         User logged = User.getInstance();
         final CollectionReference eventListReference = db.collection("Users")
-                .document(logged.getUID()).collection("HabitList").document(selectedHabit).collection("Eventlist");
+                .document(logged.getUID()).collection("HabitList").document(selectedHabit).collection("EventList");
         eventText = findViewById(R.id.event_editText_viewedit);
         dateText = findViewById(R.id.event_date_viewedit);
         confirm = findViewById(R.id.confirm_button_viewedit);
@@ -141,7 +137,6 @@ public class ViewEditEventActivity extends AppCompatActivity {
                                 Log.w("Delete event", "Error deleting document", e);
                             }
                         });
-
             }
         });
 
@@ -163,42 +158,57 @@ public class ViewEditEventActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Not valid date", Toast.LENGTH_LONG).show();
                         return;
                     }
-
-                    eventListReference.document(selectedEventDate)
-                            .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d("Delete event", "event data has been deleted successfully!");
-
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("Delete event", "Error deleting document", e);
-                                }
-                            });
-
                     eventListReference
                             .document(dateText.getText().toString())
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // These are a method which gets executed when the task is succeeded
-                                    Log.d("Adding event", "event data has been edited successfully!");
-                                    finish();
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Toast.makeText(getApplicationContext(),"cannot edit event: another event at the same day", Toast.LENGTH_LONG).show();
+                                } else {
+                                    eventListReference.document(selectedEventDate)
+                                            .delete()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("Delete event", "event data has been deleted successfully!");
+
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.w("Delete event", "Error deleting document", e);
+                                                }
+                                            });
+                                    eventListReference
+                                            .document(dateText.getText().toString())
+                                            .set(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // These are a method which gets executed when the task is succeeded
+                                                    Log.d("Adding event", "event data has been edited successfully!");
+                                                    finish();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // These are a method which gets executed if there’s any problem
+                                                    Log.d("Adding event", "Habit data could not be edited!" + e.toString());
+                                                    Toast.makeText(getApplicationContext(),"Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
                                 }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // These are a method which gets executed if there’s any problem
-                                    Log.d("Adding event", "Habit data could not be edited!" + e.toString());
-                                    Toast.makeText(getApplicationContext(),"Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            }
+                        }
+                    });
+
+
                 }
             }
         });

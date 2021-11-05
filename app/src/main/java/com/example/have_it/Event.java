@@ -1,7 +1,5 @@
 package com.example.have_it;
 
-import java.util.ArrayList;
-
 /**
  *This is the class for managing the information of event
  *@author songkunguo

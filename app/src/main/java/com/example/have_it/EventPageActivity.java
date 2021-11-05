@@ -1,8 +1,5 @@
 package com.example.have_it;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,8 +8,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,9 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  *This is the activity for main page of viewing events
@@ -72,7 +69,7 @@ public class EventPageActivity extends AppCompatActivity {
         User logged = User.getInstance();
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
-                .document(selectedTitle).collection("Eventlist");
+                .document(selectedTitle).collection("EventList");
 
         eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
