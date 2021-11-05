@@ -97,6 +97,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AddHabitActivity" />
         </activity>
+        <activity
+            android:name=".IndicatorActivity"
+            android:exported="true"
+            android:parentActivityName=".ViewEditHabitActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AddHabitActivity" />
+        </activity>
     </application>
 
 </manifest>

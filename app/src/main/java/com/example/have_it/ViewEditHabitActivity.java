@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dpro.widgets.WeekdaysPicker;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -156,7 +157,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
             }
         });
 
-        final CollectionReference EventListReference = db.collection("Users")
+        final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
                 .document(selectedTitle).collection("Eventlist");
 
@@ -229,7 +230,7 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                                     }
                                 });
 
-                        EventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                                     FirebaseFirestoreException error) {
@@ -315,14 +316,14 @@ public class ViewEditHabitActivity extends AppCompatActivity {
                             }
                         });
 
-                EventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                             FirebaseFirestoreException error) {
                         for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                         {
                             String date = (String) doc.getData().get("date");
-                            EventListReference.document(date)
+                            eventListReference.document(date)
                                     .delete();
                         }
                     }
@@ -338,6 +339,16 @@ public class ViewEditHabitActivity extends AppCompatActivity {
             public void onClick(View view) {
                 eventListIntent.putExtra("habit", selectedTitle);
                 startActivity(eventListIntent);
+            }
+        });
+
+        final FloatingActionButton indicator_Button = findViewById(R.id.indicator_button);
+        final Intent indicatorIntent = new Intent(this, IndicatorActivity.class);
+        indicator_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                indicatorIntent.putExtra("habit", selectedTitle);
+                startActivity(indicatorIntent);
             }
         });
     }
