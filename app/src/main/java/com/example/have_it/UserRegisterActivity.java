@@ -18,13 +18,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.HashMap;
+
 /**
  * User_RegisterActivity represent all the activities happened on register page.
  * @author Jianbang Chen,Yuling Shen
  * @see UserRegisterActivity
  * @version 1.2
  */
-public class UserRegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserRegisterActivity extends AppCompatActivity implements View.OnClickListener, DatabaseUserReference, FirestoreAddData{
     /**
      *A reference to firebase Authentication, of class {@link FirebaseAuth}
      */
@@ -127,6 +129,7 @@ public class UserRegisterActivity extends AppCompatActivity implements View.OnCl
 
                         if(task.isSuccessful()){
                             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
+                            addDataToFirestore();
                             Toast.makeText(UserRegisterActivity.this, "registered, check your email to verify your account!", Toast.LENGTH_LONG).show();
                             finish();
                         }else{
@@ -135,5 +138,18 @@ public class UserRegisterActivity extends AppCompatActivity implements View.OnCl
                         }
                     }
                 });
+    }
+
+    /**
+     * This is the method for adding data to the firestore
+     */
+    @Override
+    public void addDataToFirestore() {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Name",editTextFullName.getText().toString().trim());
+
+        db.collection("Users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .set(data);
     }
 }

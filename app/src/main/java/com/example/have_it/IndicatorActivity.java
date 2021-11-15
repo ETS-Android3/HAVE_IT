@@ -39,17 +39,12 @@ import java.util.Locale;
  *This is the activity for implementing an indicator using compact calendar view (Get resource from: com.github.sundeepk.compactcalendarview.CompactCalendarView)
  * @author ruiqingtian
  */
-public class IndicatorActivity extends AppCompatActivity {
+public class IndicatorActivity extends AppCompatActivity implements DatabaseUserReference{
 
     /**
      * A reference to compact calendar view, of class {@link CompactCalendarView}
      */
     CompactCalendarView simpleCalendarView;
-
-    /**
-     * A reference to firestore database, of class {@link FirebaseFirestore}
-     */
-    FirebaseFirestore db;
 
     /**
      * A reference to date format that displayed on the title, of class {@link SimpleDateFormat}
@@ -84,9 +79,7 @@ public class IndicatorActivity extends AppCompatActivity {
             actionBar.setTitle(dateFormatMonth.format(new Date()));
         }
 
-        db = FirebaseFirestore.getInstance();
         //Access the indicator as a specific user
-        User logged = User.getInstance();
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
 

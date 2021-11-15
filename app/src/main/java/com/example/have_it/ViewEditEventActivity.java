@@ -33,11 +33,7 @@ import java.util.HashMap;
  *This is the activity for edit or delete event
  * @author songkunguo
  */
-public class ViewEditEventActivity extends AppCompatActivity {
-    /**
-     *A reference to firestore database, of class {@link FirebaseFirestore}
-     */
-    FirebaseFirestore db;
+public class ViewEditEventActivity extends AppCompatActivity implements DatabaseUserReference, FirestoreGetDocument, FirestoreAddData, FirestoreDeleteData{
     /**
      *Reference to event input, of class {@link EditText}
      */
@@ -58,6 +54,14 @@ public class ViewEditEventActivity extends AppCompatActivity {
      *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
+    /**
+     * The event date selected, of class {@link String}
+     */
+    String selectedEventDate;
+    /**
+     * The habit title selected, of class {@link String}
+     */
+    String selectedHabit;
 
     /**
      *This is the method invoked when the activity starts
@@ -67,28 +71,20 @@ public class ViewEditEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_event);
-        db = FirebaseFirestore.getInstance();
         Intent i = getIntent();
-        String selectedEventDate = i.getStringExtra("event_date");
-        String selectedHabit = i.getStringExtra("habit");
+        selectedEventDate = i.getStringExtra("event_date");
+        selectedHabit = i.getStringExtra("habit");
 
-        User logged = User.getInstance();
         final CollectionReference eventListReference = db.collection("Users")
-                .document(logged.getUID()).collection("HabitList").document(selectedHabit).collection("EventList");
+                .document(logged.getUID())
+                .collection("HabitList")
+                .document(selectedHabit).collection("EventList");
         eventText = findViewById(R.id.event_editText_viewedit);
         dateText = findViewById(R.id.event_date_viewedit);
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
 
-        eventListReference.document(selectedEventDate).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                eventText.setText((String)documentSnapshot.getData().get("event"));
-                //  SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
-                //DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
-                dateText.setText( documentSnapshot.getData().get("date").toString());
-            }
-        });
+        getDocument();
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,84 +139,7 @@ public class ViewEditEventActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Retrieving the city name and the province name from the EditText fields
-                final String event = eventText.getText().toString();
-                HashMap<String, Object> data = new HashMap<>();
-
-                if (event.length()>0){
-                    data.put("event", event);
-                    data.put("date", dateText.getText().toString());
-                    if (dateText.getText().toString().equals(selectedEventDate)){
-                        eventListReference
-                                .document(selectedEventDate)
-                                .update(data)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Edit Habit", "Habit data has been deleted successfully!");
-                                        finish();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("Edit Habit", "Error deleting document", e);
-                                    }
-                                });
-                    }
-                    else {
-                        eventListReference
-                                .document(dateText.getText().toString())
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            DocumentSnapshot document = task.getResult();
-                                            if (document.exists()) {
-                                                Toast.makeText(getApplicationContext(), "cannot edit event: another event at the same day", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                eventListReference
-                                                        .document(selectedEventDate)
-                                                        .delete()
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Log.d("Delete event", "event data has been deleted successfully!");
-
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Log.w("Delete event", "Error deleting document", e);
-                                                            }
-                                                        });
-                                                eventListReference
-                                                        .document(dateText.getText().toString())
-                                                        .set(data)
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                // These are a method which gets executed when the task is succeeded
-                                                                Log.d("Adding event", "event data has been edited successfully!");
-                                                                finish();
-                                                            }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                // These are a method which gets executed if there’s any problem
-                                                                Log.d("Adding event", "Habit data could not be edited!" + e.toString());
-                                                                Toast.makeText(getApplicationContext(), "Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    }
-                                });
-                    }
-                }
+                addDataToFirestore();
             }
         });
     }
@@ -238,5 +157,142 @@ public class ViewEditEventActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This is the method for getting a reference to document
+     */
+    @Override
+    public void getDocument() {
+        final CollectionReference eventListReference = db.collection("Users")
+                .document(logged.getUID())
+                .collection("HabitList")
+                .document(selectedHabit).collection("EventList");
+
+        eventListReference.document(selectedEventDate).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                eventText.setText((String)documentSnapshot.getData().get("event"));
+                //  SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
+                //DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
+                dateText.setText( documentSnapshot.getData().get("date").toString());
+            }
+        });
+    }
+
+    /**
+     * This is the method for adding data to the firestore
+     */
+    @Override
+    public void addDataToFirestore() {
+        final CollectionReference eventListReference = db.collection("Users")
+                .document(logged.getUID())
+                .collection("HabitList")
+                .document(selectedHabit).collection("EventList");
+        // Retrieving the city name and the province name from the EditText fields
+        final String event = eventText.getText().toString();
+        HashMap<String, Object> data = new HashMap<>();
+
+        if (event.length()>0){
+            data.put("event", event);
+            data.put("date", dateText.getText().toString());
+            if (dateText.getText().toString().equals(selectedEventDate)){
+                eventListReference
+                        .document(selectedEventDate)
+                        .update(data)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Edit Habit", "Habit data has been deleted successfully!");
+                                finish();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Edit Habit", "Error deleting document", e);
+                            }
+                        });
+            }
+            else {
+                eventListReference
+                        .document(dateText.getText().toString())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        Toast.makeText(getApplicationContext(), "cannot edit event: another event at the same day", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        eventListReference
+                                                .document(selectedEventDate)
+                                                .delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d("Delete event", "event data has been deleted successfully!");
+
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("Delete event", "Error deleting document", e);
+                                                    }
+                                                });
+                                        eventListReference
+                                                .document(dateText.getText().toString())
+                                                .set(data)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        // These are a method which gets executed when the task is succeeded
+                                                        Log.d("Adding event", "event data has been edited successfully!");
+                                                        finish();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // These are a method which gets executed if there’s any problem
+                                                        Log.d("Adding event", "Habit data could not be edited!" + e.toString());
+                                                        Toast.makeText(getApplicationContext(), "Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    /**
+     * This is the method for deleting data to the firestore
+     */
+    @Override
+    public void deleteDataInFirestore() {
+        final CollectionReference eventListReference = db.collection("Users")
+                .document(logged.getUID())
+                .collection("HabitList")
+                .document(selectedHabit).collection("EventList");
+        // Toast.makeText( getApplicationContext(),  selected_event_date, Toast.LENGTH_SHORT).show();
+        eventListReference.document(selectedEventDate)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Delete Event", "Habit data has been deleted successfully!");
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Delete event", "Error deleting document", e);
+                    }
+                });
     }
 }
