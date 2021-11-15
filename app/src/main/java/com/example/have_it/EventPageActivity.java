@@ -25,7 +25,7 @@ import java.util.ArrayList;
  *This is the activity for main page of viewing events
  * @author songkunguo
  */
-public class EventPageActivity extends AppCompatActivity {
+public class EventPageActivity extends AppCompatActivity implements FirestoreGetCollection, DatabaseUserReference{
     /**
      *Reference to the confirm addEvent, of class {@link Button}
      */
@@ -39,9 +39,9 @@ public class EventPageActivity extends AppCompatActivity {
      */
     EventList eventAdapter;
     /**
-     *A reference to firestore database, of class {@link FirebaseFirestore}
+     *The habit name, of class {@link String}
      */
-    FirebaseFirestore db;
+    String selectedTitle;
     /**
      *event list, of class {@link ArrayList}
      */
@@ -57,34 +57,16 @@ public class EventPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_page);
         addEvent = findViewById(R.id.add_event_button);
         Intent i = getIntent();
-        String selectedTitle = i.getStringExtra("habit");
+        selectedTitle = i.getStringExtra("habit");
         eventList = findViewById(R.id.all_event_list);
 
         final Intent addEventIntent = new Intent(this, AddEventActivity.class);
         eventDataList = new ArrayList<>();
         eventAdapter = new EventList(this, eventDataList);
         eventList.setAdapter(eventAdapter);
-        db = FirebaseFirestore.getInstance();
 
-        User logged = User.getInstance();
-        final CollectionReference eventListReference = db.collection("Users")
-                .document(logged.getUID()).collection("HabitList")
-                .document(selectedTitle).collection("EventList");
+        getCollection();
 
-        eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                eventDataList.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    String event = (String) doc.getData().get("event");
-                    String sDate = (String) doc.getData().get("date");
-                    eventDataList.add(new Event(event,sDate));
-                }
-                eventAdapter.notifyDataSetChanged();
-            }
-        });
         final Intent viewEditEventIntent = new Intent(this, ViewEditEventActivity.class);
         eventList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -93,7 +75,6 @@ public class EventPageActivity extends AppCompatActivity {
                 viewEditEventIntent.putExtra("habit", selectedTitle);
                 startActivity(viewEditEventIntent);
             }
-
         });
 
         addEvent.setOnClickListener(new View.OnClickListener() {
@@ -118,5 +99,30 @@ public class EventPageActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This is the method for getting a reference to collection
+     */
+    @Override
+    public void getCollection() {
+        final CollectionReference eventListReference = db.collection("Users")
+                .document(logged.getUID()).collection("HabitList")
+                .document(selectedTitle).collection("EventList");
+
+        eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) {
+                eventDataList.clear();
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
+                {
+                    String event = (String) doc.getData().get("event");
+                    String sDate = (String) doc.getData().get("date");
+                    eventDataList.add(new Event(event,sDate));
+                }
+                eventAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

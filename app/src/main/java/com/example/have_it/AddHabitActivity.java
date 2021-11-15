@@ -38,11 +38,7 @@ import java.util.List;
  *This is the activity for adding a new habit
  * @author yulingshen
  */
-public class AddHabitActivity extends AppCompatActivity {
-    /**
-     *A reference to firestore database, of class {@link FirebaseFirestore}
-     */
-    FirebaseFirestore db;
+public class AddHabitActivity extends AppCompatActivity implements FirestoreAddData, DatabaseUserReference{
     /**
      *Reference to title input, of class {@link EditText}
      */
@@ -76,11 +72,6 @@ public class AddHabitActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit);
-
-        db = FirebaseFirestore.getInstance();
-        User logged = User.getInstance();
-        final CollectionReference habitListReference = db.collection("Users")
-                .document(logged.getUID()).collection("HabitList");
 
         titleText = findViewById(R.id.habit_title_editText);
         reasonText = findViewById(R.id.habit_reason_editText);
@@ -128,38 +119,65 @@ public class AddHabitActivity extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Retrieving the city name and the province name from the EditText fields
-                final String title = titleText.getText().toString();
-                final String reason = reasonText.getText().toString();
-                Date startDate = new Date();
-                try {
-                    startDate = new SimpleDateFormat("yyyy-MM-dd")
-                            .parse(startDateText.getText().toString());
-                } catch (ParseException e){
-                    Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                final Timestamp startDateTimestamp = new Timestamp(startDate);
+                addDataToFirestore();
+            }
+        });
+    }
 
-                List<Integer> selectedDays = weekdaysPicker.getSelectedDays();
-                Boolean[] defaultReg= {false, false, false, false, false, false, false};
-                List<Boolean> weekdayReg = new ArrayList<>(Arrays.asList(defaultReg));
-                for (int each : selectedDays){
-                    weekdayReg.set(each-1,true);
-                }
+    /**
+     *This is the method invoked when the back in menu is pressed
+     * @param item used for its super class
+     * @return the result of its super selecting the same option
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-                HashMap<String, Object> data = new HashMap<>();
+    /**
+     * This is the method for adding data to the firestore
+     */
+    @Override
+    public void addDataToFirestore() {
+        final CollectionReference habitListReference = db.collection("Users")
+                .document(logged.getUID()).collection("HabitList");
+        // Retrieving the city name and the province name from the EditText fields
+        final String title = titleText.getText().toString();
+        final String reason = reasonText.getText().toString();
+        Date startDate = new Date();
+        try {
+            startDate = new SimpleDateFormat("yyyy-MM-dd")
+                    .parse(startDateText.getText().toString());
+        } catch (ParseException e){
+            Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
+            return;
+        }
+        final Timestamp startDateTimestamp = new Timestamp(startDate);
 
-                if (title.length()>0){
-                    data.put("title", title);
-                    data.put("reason", reason);
-                    data.put("dateStart", startDateTimestamp);
-                    data.put("weekdayReg", weekdayReg);
+        List<Integer> selectedDays = weekdaysPicker.getSelectedDays();
+        Boolean[] defaultReg= {false, false, false, false, false, false, false};
+        List<Boolean> weekdayReg = new ArrayList<>(Arrays.asList(defaultReg));
+        for (int each : selectedDays){
+            weekdayReg.set(each-1,true);
+        }
 
-                    habitListReference
-                            .document(title)
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        HashMap<String, Object> data = new HashMap<>();
+
+        if (title.length()>0){
+            data.put("title", title);
+            data.put("reason", reason);
+            data.put("dateStart", startDateTimestamp);
+            data.put("weekdayReg", weekdayReg);
+
+            habitListReference
+                    .document(title)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
@@ -191,23 +209,6 @@ public class AddHabitActivity extends AppCompatActivity {
                         }
                     });
 
-                }
-            }
-        });
-    }
-
-    /**
-     *This is the method invoked when the back in menu is pressed
-     * @param item used for its super class
-     * @return the result of its super selecting the same option
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
         }
-        return super.onOptionsItemSelected(item);
     }
 }

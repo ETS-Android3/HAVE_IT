@@ -26,7 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
  * @version 1.2
  *
  */
-public class UserLoginActivity extends AppCompatActivity implements View.OnClickListener  {
+public class UserLoginActivity extends AppCompatActivity implements View.OnClickListener, DatabaseUserReference{
     /**
      *Reference to the textview of register and forgot password , of class {@link TextView}
      */
@@ -133,9 +133,7 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
                     //User Email verification
                     if(user.isEmailVerified()){
                         //redirect to user profile
-                        User loggedUser = User.getInstance();
-                        loggedUser.setUID(user.getUid());
-
+                        logged.setUID(user.getUid());
                         startActivity(new Intent(UserLoginActivity.this,HabitPageActivity.class));
                     }else{
                         user.sendEmailVerification();

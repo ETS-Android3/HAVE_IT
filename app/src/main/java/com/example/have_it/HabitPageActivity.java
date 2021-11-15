@@ -26,7 +26,7 @@ import java.util.List;
  *This is the activity for main page of viewing habits
  * @author yulingshen
  */
-public class HabitPageActivity extends AppCompatActivity {
+public class HabitPageActivity extends AppCompatActivity implements  FirestoreGetCollection, DatabaseUserReference{
     /**
      *A reference to today habit list view, of class {@link ListView}
      */
@@ -51,10 +51,6 @@ public class HabitPageActivity extends AppCompatActivity {
      *today data list, of class {@link ArrayList}
      */
     ArrayList<Habit> todayHabitDataList;
-    /**
-     *A reference to firestore database, of class {@link FirebaseFirestore}
-     */
-    FirebaseFirestore db;
     /**
      *The extra message used for intent, of class {@link String}
      */
@@ -89,9 +85,32 @@ public class HabitPageActivity extends AppCompatActivity {
         habitList.setAdapter(habitAdapter);
         todayHabitList.setAdapter(todayHabitAdapter);
 
-        db = FirebaseFirestore.getInstance();
+        getCollection();
 
-        User logged = User.getInstance();
+        final Intent viewEditHabitIntent = new Intent(this, ViewEditHabitActivity.class);
+        habitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                viewEditHabitIntent.putExtra("habit", habitDataList.get(position).getTitle());
+
+                startActivity(viewEditHabitIntent);
+            }
+        });
+        todayHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                viewEditHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
+
+                startActivity(viewEditHabitIntent);
+            }
+        });
+    }
+
+    /**
+     * This is the method for getting a reference to collection
+     */
+    @Override
+    public void getCollection() {
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
 
@@ -116,24 +135,6 @@ public class HabitPageActivity extends AppCompatActivity {
                     todayHabitDataList.add(each);
                 }
                 todayHabitAdapter.notifyDataSetChanged();
-            }
-        });
-
-        final Intent viewEditHabitIntent = new Intent(this, ViewEditHabitActivity.class);
-        habitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                viewEditHabitIntent.putExtra("habit", habitDataList.get(position).getTitle());
-
-                startActivity(viewEditHabitIntent);
-            }
-        });
-        todayHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                viewEditHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
-
-                startActivity(viewEditHabitIntent);
             }
         });
     }
