@@ -80,6 +80,18 @@
         app:layout_constraintTop_toBottomOf="@+id/habit_weekday_title_viewedit"
         app:sunday_first_day="false" />
 
+    <Switch
+        android:id="@+id/publicity_switch_viewedit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Public"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/habit_weekday_selection_viewedit"
+        tools:ignore="TouchTargetSizeCheck" />
+
     <Button
         android:id="@+id/confirm_button_viewedit"
         android:layout_width="130dp"

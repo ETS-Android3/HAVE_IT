@@ -74,4 +74,19 @@ public class HabitList extends ArrayAdapter<Habit> {
         }
         return result;
     }
+
+    /**
+     *The method for getting a habit list of the habits that is public
+     *
+     * @return {@link ArrayList} The habit list for public habits
+     */
+    public ArrayList<Habit> getPublicHabits(){
+        ArrayList<Habit> result = new ArrayList<Habit>();
+        for (Habit each : habits){
+            if (each.getPublicity()){
+                result.add(each);
+            }
+        }
+        return result;
+    }
 }

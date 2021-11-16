@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,10 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
      */
     WeekdaysPicker weekdaysPicker;
     /**
+     * Reference to the switch for publicity of habit, of class {@link Switch}
+     */
+    Switch publicitySwitch;
+    /**
      *Reference to the confirm button, of class {@link Button}
      */
     Button confirm;
@@ -99,6 +104,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
         eventList = findViewById(R.id.event_list_button);
+        publicitySwitch = findViewById(R.id.publicity_switch_viewedit);
 
         Intent i = getIntent();
         selectedTitle = i.getStringExtra("habit");
@@ -214,6 +220,8 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
             weekdayReg.set(each - 1, true);
         }
 
+        final Boolean publicity = publicitySwitch.isChecked();
+
         HashMap<String, Object> data = new HashMap<>();
 
         if (title.length() > 0) {
@@ -221,6 +229,8 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
             data.put("reason", reason);
             data.put("dateStart", startDateTimestamp);
             data.put("weekdayReg", weekdayReg);
+            data.put("publicity", publicity);
+
 
             if (title.equals(selectedTitle)) {
                 habitListReference.document(selectedTitle)
@@ -370,6 +380,8 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                     c++;
                 }
                 weekdaysPicker.setSelectedDays(weekdayReg);
+
+                publicitySwitch.setChecked((Boolean) documentSnapshot.getData().get("publicity"));
             }
         });
     }

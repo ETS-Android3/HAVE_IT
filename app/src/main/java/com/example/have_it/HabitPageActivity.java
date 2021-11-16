@@ -126,7 +126,8 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
                     Timestamp startTimestamp = (Timestamp) doc.getData().get("dateStart");
                     Date dateStart = startTimestamp.toDate();
                     List<Boolean> weekdayRegArray = (List<Boolean>) doc.getData().get("weekdayReg");
-                    habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray));
+                    Boolean publicity = (Boolean) doc.getData().get("publicity");
+                    habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray, publicity));
                 }
                 habitAdapter.notifyDataSetChanged();
                 todayHabitDataList.clear();
