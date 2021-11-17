@@ -128,6 +128,8 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
                         break;
 
                     case R.id.account_menu:
+                        final Intent accountIntent = new Intent(HabitPageActivity.this, AccountPageActivity.class);
+                        startActivity(accountIntent);
                         break;
                 }
                 return false;
