@@ -116,7 +116,7 @@ public class IndicatorActivity extends AppCompatActivity implements DatabaseUser
 
                 final CollectionReference EventListReference = db.collection("Users")
                         .document(logged.getUID()).collection("HabitList")
-                        .document(selectedHabit).collection("Eventlist");
+                        .document(selectedHabit).collection("EventList");
 
 
                 /*
