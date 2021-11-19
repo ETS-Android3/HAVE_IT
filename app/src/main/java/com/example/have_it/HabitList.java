@@ -28,7 +28,7 @@ public class HabitList extends ArrayAdapter<Habit> {
     private Context context;
 
     /**
-     *This is the contstructor of {@link HabitList}
+     *This is the constructor of {@link HabitList}
      * @param context @see context, {@link Context}, give the context
      * @param habits @see habits, {@link ArrayList}, give the habit data
      */
@@ -76,7 +76,7 @@ public class HabitList extends ArrayAdapter<Habit> {
     }
 
     /**
-     *The method for getting a habit list of the habits that is public
+     *The method for getting a habit list of the habits that are public
      *
      * @return {@link ArrayList} The habit list for public habits
      */

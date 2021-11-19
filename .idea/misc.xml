@@ -29,6 +29,7 @@
         <entry key="app/src/main/res/layout/fragment_new_following.xml" value="0.13768115942028986" />
         <entry key="app/src/main/res/layout/fragment_now_following.xml" value="0.2421875" />
         <entry key="app/src/main/res/layout/habit_list_content.xml" value="0.11865942028985507" />
+        <entry key="app/src/main/res/layout/user_list_content.xml" value="0.161231884057971" />
       </map>
     </option>
   </component>

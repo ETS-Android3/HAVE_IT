@@ -28,7 +28,7 @@ public class EventList extends ArrayAdapter<Event> {
     private Context context;
 
     /**
-     *This is the contstructor of {@link EventList}
+     *This is the constructor of {@link EventList}
      * @param context @see context, {@link Context}, give the context
      * @param events @see habits, {@link ArrayList}, give the event data
      */
