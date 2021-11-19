@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     android:orientation="vertical">
 
-
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textView0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#3F51B5"
-        android:text="All Users"
+        android:text="Habits"
         android:textColor="#FFFFFF"
         android:textSize="30sp" />
 
@@ -24,7 +22,7 @@
         android:background="#00FFFFFF">
 
         <ListView
-            android:id="@+id/all_users_list"
+            android:id="@+id/following_habit_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
