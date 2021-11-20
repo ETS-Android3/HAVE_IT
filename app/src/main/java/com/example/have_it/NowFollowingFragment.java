@@ -1,11 +1,9 @@
 package com.example.have_it;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +21,7 @@ public class NowFollowingFragment extends Fragment implements DatabaseUserRefere
     GeneralUserList nowFollowingAdapter;
     ArrayList<GeneralUser> userDataList;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,18 +33,8 @@ public class NowFollowingFragment extends Fragment implements DatabaseUserRefere
         nowFollowingAdapter = new GeneralUserList(this.getActivity(),userDataList);
         nowFollowingList.setAdapter(nowFollowingAdapter);
 
-        FollowingController.getNowFollowing(nowFollowingAdapter, userDataList);
+        //FollowingController.getNowFollowing(nowFollowingAdapter, userDataList);
 
-        final Intent followingHabitIntent = new Intent (this.getActivity(), FollowingHabitPageActivity.class);
-
-        nowFollowingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                followingHabitIntent.putExtra("UID", userDataList.get(position).getUID());
-                followingHabitIntent.putExtra("name", userDataList.get(position).getName());
-                startActivity(followingHabitIntent);
-            }
-        });
 
         return view;
     }
