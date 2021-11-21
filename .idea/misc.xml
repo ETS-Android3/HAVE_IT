@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../layout/custom_preview.xml" value="0.2359375" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.36614583333333334" />
         <entry key="app/src/main/res/drawable/ic_baseline_contact_mail_24.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.25729166666666664" />
@@ -26,10 +27,13 @@
         <entry key="app/src/main/res/layout/activity_view_edit_event.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/activity_view_edit_habit.xml" value="0.22" />
         <entry key="app/src/main/res/layout/event_list_content.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/following_request_content.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_following_request.xml" value="0.13768115942028986" />
+        <entry key="app/src/main/res/layout/fragment_following_request_reply.xml" value="0.189209726443769" />
         <entry key="app/src/main/res/layout/fragment_new_following.xml" value="0.13768115942028986" />
         <entry key="app/src/main/res/layout/fragment_now_following.xml" value="0.2421875" />
         <entry key="app/src/main/res/layout/habit_list_content.xml" value="0.11865942028985507" />
+        <entry key="app/src/main/res/layout/new_follow_user_content.xml" value="0.33" />
         <entry key="app/src/main/res/layout/user_list_content.xml" value="0.161231884057971" />
       </map>
     </option>

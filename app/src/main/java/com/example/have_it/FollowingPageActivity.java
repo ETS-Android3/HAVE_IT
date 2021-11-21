@@ -1,3 +1,4 @@
+
 package com.example.have_it;
 
 import android.content.Intent;
@@ -12,6 +13,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 public class FollowingPageActivity extends AppCompatActivity {
 
@@ -40,6 +43,10 @@ public class FollowingPageActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_outline_people_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_baseline_search_24);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_outline_contact_mail_24);
+        tabLayout.getTabAt(3).setIcon(R.drawable.ic_baseline_message_24);
+
+        FollowingController.setBadge(tabLayout);
+
 
         bottomNavigationView.setSelectedItemId(R.id.following_menu);
 
@@ -70,6 +77,7 @@ public class FollowingPageActivity extends AppCompatActivity {
         adapter.addFragment(new NowFollowingFragment());
         adapter.addFragment(new NewFollowingFragment());
         adapter.addFragment(new FollowingRequestFragment());
+        adapter.addFragment(new FollowingRequestReplyFragment());
         viewPager.setAdapter(adapter);
     }
 

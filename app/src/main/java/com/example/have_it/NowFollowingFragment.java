@@ -11,16 +11,13 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-
 import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
 public class NowFollowingFragment extends Fragment implements DatabaseUserReference{
     ListView nowFollowingList;
-    GeneralUserList nowFollowingAdapter;
+    FollowingUserList nowFollowingAdapter;
     ArrayList<GeneralUser> userDataList;
 
     @Nullable
@@ -31,7 +28,7 @@ public class NowFollowingFragment extends Fragment implements DatabaseUserRefere
         nowFollowingList = view.findViewById(R.id.following_user_list);
 
         userDataList = new ArrayList<>();
-        nowFollowingAdapter = new GeneralUserList(this.getActivity(),userDataList);
+        nowFollowingAdapter = new FollowingUserList(this.getActivity(),userDataList);
         nowFollowingList.setAdapter(nowFollowingAdapter);
 
         FollowingController.getNowFollowing(nowFollowingAdapter, userDataList);

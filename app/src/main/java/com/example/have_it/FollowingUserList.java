@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class GeneralUserList extends ArrayAdapter<GeneralUser> {
+public class FollowingUserList extends ArrayAdapter<GeneralUser> {
     /**
      *This is the array list for general user data, of class {@link ArrayList}
      */
@@ -23,11 +23,11 @@ public class GeneralUserList extends ArrayAdapter<GeneralUser> {
     private Context context;
 
     /**
-     *This is the constructor of {@link GeneralUserList}
+     *This is the constructor of {@link FollowingUserList}
      * @param context @see context, {@link Context}, give the context
      * @param generalUsers @see habits, {@link ArrayList}, give the general user data
      */
-    public GeneralUserList( Context context, ArrayList<GeneralUser> generalUsers) {
+    public FollowingUserList(Context context, ArrayList<GeneralUser> generalUsers) {
         super(context, 0, generalUsers);
         this.generalUsers = generalUsers;
         this.context = context;
@@ -53,12 +53,11 @@ public class GeneralUserList extends ArrayAdapter<GeneralUser> {
         return view;
     }
 
-    public void deleteGeneralUser(String UID){
+    public ArrayList<String> getUID(){
+        ArrayList<String> result = new ArrayList<>();
         for (GeneralUser each : generalUsers){
-            if(each.getUID().equals(UID)){
-                generalUsers.remove(each);
-                return;
-            }
+            result.add(each.getUID());
         }
+        return result;
     }
 }
