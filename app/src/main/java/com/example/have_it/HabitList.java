@@ -28,7 +28,7 @@ public class HabitList extends ArrayAdapter<Habit> {
     private Context context;
 
     /**
-     *This is the contstructor of {@link HabitList}
+     *This is the constructor of {@link HabitList}
      * @param context @see context, {@link Context}, give the context
      * @param habits @see habits, {@link ArrayList}, give the habit data
      */
@@ -69,6 +69,21 @@ public class HabitList extends ArrayAdapter<Habit> {
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         for (Habit each : habits){
             if (each.getWeekdayReg().get(day-1)){
+                result.add(each);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *The method for getting a habit list of the habits that are public
+     *
+     * @return {@link ArrayList} The habit list for public habits
+     */
+    public ArrayList<Habit> getPublicHabits(){
+        ArrayList<Habit> result = new ArrayList<Habit>();
+        for (Habit each : habits){
+            if (each.getPublicity()){
                 result.add(each);
             }
         }

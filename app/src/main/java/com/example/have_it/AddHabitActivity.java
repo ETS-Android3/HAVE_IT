@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,10 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
      *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
+    /**
+     * Reference to the switch for publicity of habit, of class {@link Switch}
+     */
+    Switch publicitySwitch;
 
     /**
      *This is the method invoked when the activity starts
@@ -78,6 +83,7 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
         weekdaysPicker = (WeekdaysPicker) findViewById(R.id.habit_weekday_selection);
         startDateText = findViewById(R.id.habit_start_date);
         confirm = findViewById(R.id.add_habit_button);
+        publicitySwitch = findViewById(R.id.publicity_switch);
 
         weekdaysPicker.setSelected(true);
 
@@ -166,6 +172,8 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
             weekdayReg.set(each-1,true);
         }
 
+        final Boolean publicity = publicitySwitch.isChecked();
+
         HashMap<String, Object> data = new HashMap<>();
 
         if (title.length()>0){
@@ -173,6 +181,7 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
             data.put("reason", reason);
             data.put("dateStart", startDateTimestamp);
             data.put("weekdayReg", weekdayReg);
+            data.put("publicity", publicity);
 
             habitListReference
                     .document(title)

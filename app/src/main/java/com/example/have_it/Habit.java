@@ -25,6 +25,10 @@ public class Habit{
      * This is the weekdays information of habit, of class {@link ArrayList}
      */
     private ArrayList<Boolean> weekdayReg;
+    /**
+     * This is the publicity of activity, with true as public, of class {@link Boolean}
+     */
+    private Boolean publicity;
 
 
     /**
@@ -33,8 +37,9 @@ public class Habit{
      * @param reason @see reason, {@link String}, give the reason
      * @param dateStart @see dateStart, {@link String}, give the start date
      * @param weekdayReg @see weekdayReg, {@link String}, give the weekdays selection
+     * @param publicity @see publicity, {@link Boolean}, give the publicity
      */
-    public Habit(String title, String reason, Date dateStart, ArrayList<Boolean> weekdayReg) {
+    public Habit(String title, String reason, Date dateStart, ArrayList<Boolean> weekdayReg, Boolean publicity) {
         this.title = title;
         this.reason = reason;
         this.dateStart = dateStart;
@@ -43,6 +48,7 @@ public class Habit{
             this.weekdayReg = new ArrayList<>(Arrays.asList(defaultReg));
         }
         this.weekdayReg = weekdayReg;
+        this.publicity = publicity;
     }
 
     /**
@@ -109,5 +115,19 @@ public class Habit{
         this.weekdayReg = weekdayReg;
     }
 
+    /**
+     * This is getter for publicity of the habit
+     * @return Returns {@link Boolean} {@link Habit#publicity}
+     */
+    public Boolean getPublicity() {
+        return publicity;
+    }
 
+    /**
+     * This is setter for publicity
+     * @param publicity {@link Boolean}, set {@link Habit#publicity}
+     */
+    public void setPublicity(Boolean publicity) {
+        this.publicity = publicity;
+    }
 }

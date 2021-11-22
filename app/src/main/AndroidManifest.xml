@@ -105,6 +105,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AddHabitActivity" />
         </activity>
+        <activity
+            android:name=".FollowingPageActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".AccountPageActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

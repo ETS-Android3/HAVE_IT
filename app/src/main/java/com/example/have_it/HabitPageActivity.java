@@ -2,14 +2,18 @@ package com.example.have_it;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -52,6 +56,10 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
      */
     ArrayList<Habit> todayHabitDataList;
     /**
+     * Reference to the bottom navigation menu, of class {@link BottomNavigationView}
+     */
+    BottomNavigationView bottomNavigationView;
+    /**
      *The extra message used for intent, of class {@link String}
      */
     public static final String EXTRA_MESSAGE = "com.example.have_it.MESSAGE";
@@ -67,6 +75,8 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
 
         habitList = findViewById(R.id.all_habit_list);
         todayHabitList = findViewById(R.id.today_habit_list);
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.habit_menu);
 
         final FloatingActionButton addHabitButton = findViewById(R.id.add_habit_button);
         final Intent addHabitIntent = new Intent(this, AddHabitActivity.class);
@@ -104,6 +114,27 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
                 startActivity(viewEditHabitIntent);
             }
         });
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.habit_menu:
+                        break;
+
+                    case R.id.following_menu:
+                        final Intent followingIntent = new Intent(HabitPageActivity.this, FollowingPageActivity.class);
+                        startActivity(followingIntent);
+                        break;
+
+                    case R.id.account_menu:
+                        final Intent accountIntent = new Intent(HabitPageActivity.this, AccountPageActivity.class);
+                        startActivity(accountIntent);
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -126,7 +157,8 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
                     Timestamp startTimestamp = (Timestamp) doc.getData().get("dateStart");
                     Date dateStart = startTimestamp.toDate();
                     List<Boolean> weekdayRegArray = (List<Boolean>) doc.getData().get("weekdayReg");
-                    habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray));
+                    Boolean publicity = (Boolean) doc.getData().get("publicity");
+                    habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray, publicity));
                 }
                 habitAdapter.notifyDataSetChanged();
                 todayHabitDataList.clear();
