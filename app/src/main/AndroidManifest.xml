@@ -118,6 +118,14 @@
                 android:value=".FollowingPageActivity" />
         </activity>
         <activity
+            android:name=".FollowingIndicatorActivity"
+            android:exported="true"
+            android:parentActivityName=".FollowingHabitPageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FollowingHabitPageActivity" />
+        </activity>
+        <activity
             android:name=".AccountPageActivity"
             android:exported="true">
         </activity>

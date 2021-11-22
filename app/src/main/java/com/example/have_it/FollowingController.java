@@ -329,6 +329,28 @@ public class FollowingController implements DatabaseUserReference{
         }
     }
 
+    public static void confirmReply(RequestedUser userSelection){
+        final CollectionReference receivedRequestListReference = db.collection("Users")
+                .document(logged.getUID())
+                .collection("RequestedList");
+
+        receivedRequestListReference
+                .document(userSelection.getUID())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Delete replied request", "Done deleting");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Delete replied request", "Error deleting", e);
+                    }
+                });
+    }
+
     public static void setBadge(TabLayout tabLayout){
         final CollectionReference requestedListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -337,11 +359,28 @@ public class FollowingController implements DatabaseUserReference{
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots
                     , @Nullable FirebaseFirestoreException error) {
-                int count = 0;
+                int requestCount = 0;
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
-                    count++;
+                    requestCount++;
                 }
-                tabLayout.getTabAt(2).getOrCreateBadge().setNumber(count);
+                tabLayout.getTabAt(2).getOrCreateBadge().setNumber(requestCount);
+            }
+        });
+
+        final CollectionReference replyListReference = db.collection("Users")
+                .document(logged.getUID())
+                .collection("RequestedList");
+        replyListReference.addSnapshotListener(new EventListener<QuerySnapshot>(){
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots
+                    , @Nullable FirebaseFirestoreException error) {
+                int replyCount = 0;
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
+                    if ((boolean) doc.getData().get("replied")) {
+                        replyCount++;
+                    }
+                }
+                tabLayout.getTabAt(3).getOrCreateBadge().setNumber(replyCount);
             }
         });
     }

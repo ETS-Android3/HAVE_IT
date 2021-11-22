@@ -2,6 +2,8 @@ package com.example.have_it;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -22,7 +24,6 @@ public class FollowingHabitPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_following_habit_page);
         followingHabitList = findViewById(R.id.following_habit_list);
         Intent i = getIntent();
-        String name = i.getStringExtra("name");
         String UID = i.getStringExtra("UID");
 
         habitDataList = new ArrayList<>();
@@ -30,5 +31,17 @@ public class FollowingHabitPageActivity extends AppCompatActivity {
         followingHabitList.setAdapter(habitAdapter);
 
         FollowingController.setUserHabit(UID, habitAdapter, habitDataList);
+
+        final Intent indicatorIntent = new Intent(this,FollowingIndicatorActivity.class);
+
+        followingHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                indicatorIntent.putExtra("UID",UID);
+                indicatorIntent.putExtra("habit",habitDataList.get(position).getTitle());
+
+                startActivity(indicatorIntent);
+            }
+        });
     }
 }

@@ -34,6 +34,45 @@ public class RequestedUserList extends ArrayAdapter<RequestedUser> {
         this.context = context;
     }
 
+    /**
+     *This method is invoked when a list of users is to be shown in {@link FollowingPageActivity}
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.request_reply_content, parent,false);
+        RequestedUser user = usersData.get(position);
+        TextView replyContext = view.findViewById(R.id.reply_status);
+        Button confirmButton = view.findViewById(R.id.confirm_button);
+
+        if(user.isReplied()){
+            confirmButton.setVisibility(View.VISIBLE);
+            if (user.isAllowed()){
+                replyContext.setText(user.getName() + " allowed your request");
+            }
+            else{
+                replyContext.setText(user.getName() + " rejected your request");
+            }
+        }
+        else{
+            replyContext.setText(user.getName() + " has not yet replied");
+            confirmButton.setVisibility(View.INVISIBLE);
+        }
+
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FollowingController.confirmReply(user);
+            }
+        });
+
+        return view;
+    }
+
     public ArrayList<String> getUID(){
         ArrayList<String> result = new ArrayList<>();
         for (RequestedUser each : usersData){
