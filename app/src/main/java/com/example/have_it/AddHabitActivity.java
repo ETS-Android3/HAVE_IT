@@ -24,6 +24,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -150,6 +152,7 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
      */
     @Override
     public void addDataToFirestore() {
+
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
         // Retrieving the city name and the province name from the EditText fields
@@ -183,40 +186,50 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
             data.put("weekdayReg", weekdayReg);
             data.put("publicity", publicity);
 
-            habitListReference
-                    .document(title)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()) {
-                                    Toast.makeText(getApplicationContext(),"cannot add because the habit with same title exists", Toast.LENGTH_LONG).show();
-                                } else {
-                                    habitListReference
-                                            .document(title)
-                                            .set(data)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    // These are a method which gets executed when the task is succeeded
-                                                    Log.d("Adding Habit", "Habit data has been added successfully!");
-                                                    finish();
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    // These are a method which gets executed if there’s any problem
-                                                    Log.d("Adding Habit", "Habit data could not be added!" + e.toString());
-                                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
-                                                }
-                                            });
-                                }
-                            }
-                        }
-                    });
+            System.out.println("sd");
+
+
+            HabitController.addhabit(data,habitListReference,title);
+
+            finish();
+
+
+
+
+//            habitListReference
+//                    .document(title)
+//                    .get()
+//                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                DocumentSnapshot document = task.getResult();
+//                                if (document.exists()) {
+//                                    Toast.makeText(getApplicationContext(),"cannot add because the habit with same title exists", Toast.LENGTH_LONG).show();
+//                                } else {
+//                                    habitListReference
+//                                            .document(title)
+//                                            .set(data)
+//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                @Override
+//                                                public void onSuccess(Void aVoid) {
+//                                                    // These are a method which gets executed when the task is succeeded
+//                                                    Log.d("Adding Habit", "Habit data has been added successfully!");
+//                                                    finish();
+//                                                }
+//                                            })
+//                                            .addOnFailureListener(new OnFailureListener() {
+//                                                @Override
+//                                                public void onFailure(@NonNull Exception e) {
+//                                                    // These are a method which gets executed if there’s any problem
+//                                                    Log.d("Adding Habit", "Habit data could not be added!" + e.toString());
+//                                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
+//                                                }
+//                                            });
+//                                }
+//                            }
+//                        }
+//                    });
 
         }
     }

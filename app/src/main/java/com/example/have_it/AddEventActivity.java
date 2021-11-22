@@ -136,6 +136,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
+            String newDate=dateText.getText().toString();
             Date startDate = new Date();
             try {
                 startDate = new SimpleDateFormat("yyyy-MM-dd")
@@ -144,37 +145,39 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 Toast.makeText(getApplicationContext(),"Not valid date", Toast.LENGTH_LONG).show();
                 return;
             }
-            eventListReference.document(dateText.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Toast.makeText(getApplicationContext(),"cannot add event: another event at the same day", Toast.LENGTH_LONG).show();
-                        } else {
-                            eventListReference
-                                    .document(dateText.getText().toString())
-                                    .set(data)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            // These are a method which gets executed when the task is succeeded
-                                            Log.d("Adding event", "event data has been added successfully!");
-                                            finish();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            // These are a method which gets executed if there’s any problem
-                                            Log.d("Adding event", "Habit event could not be added!" + e.toString());
-                                            Toast.makeText(getApplicationContext(),"Not being able to add data", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                        }
-                    }
-                }
-            });
+            EventController.addEventToFirestore(eventListReference,event,data,newDate);
+            finish();
+//            eventListReference.document(dateText.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                    if (task.isSuccessful()) {
+//                        DocumentSnapshot document = task.getResult();
+//                        if (document.exists()) {
+//                            Toast.makeText(getApplicationContext(),"cannot add event: another event at the same day", Toast.LENGTH_LONG).show();
+//                        } else {
+//                            eventListReference
+//                                    .document(dateText.getText().toString())
+//                                    .set(data)
+//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            // These are a method which gets executed when the task is succeeded
+//                                            Log.d("Adding event", "event data has been added successfully!");
+//                                            finish();
+//                                        }
+//                                    })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            // These are a method which gets executed if there’s any problem
+//                                            Log.d("Adding event", "Habit event could not be added!" + e.toString());
+//                                            Toast.makeText(getApplicationContext(),"Not being able to add data", Toast.LENGTH_LONG).show();
+//                                        }
+//                                    });
+//                        }
+//                    }
+//                }
+//            });
         }
     }
 }
