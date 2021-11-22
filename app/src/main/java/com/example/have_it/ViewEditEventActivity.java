@@ -43,6 +43,10 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
      */
     TextView dateText;
     /**
+     *Reference to the pick location button, of class {@link Button}
+     */
+    Button changeLocation;
+    /**
      *Reference to the confirm button, of class {@link Button}
      */
     Button confirm;
@@ -64,6 +68,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     String selectedHabit;
 
     /**
+     * Lagitude and Longitude to store the location as String Variable
+     */
+    String latitude = null;
+    String longitude = null;
+
+    /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
      */
@@ -81,10 +91,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 .document(selectedHabit).collection("EventList");
         eventText = findViewById(R.id.event_editText_viewedit);
         dateText = findViewById(R.id.event_date_viewedit);
+        changeLocation = findViewById(R.id.change_location_button);
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
 
         getDocument();
+
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +123,16 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                             }
                         }, year, month, day);
                 picker.show();
+            }
+        });
+
+        Intent intent = new Intent(ViewEditEventActivity.this.getApplicationContext(), ChangeLocationMapsActivity.class);
+        changeLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent.putExtra("LAT", latitude);
+                intent.putExtra("LONG",longitude);
+                startActivityForResult(intent, 2404);
             }
         });
 
@@ -176,6 +198,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 //  SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
                 //DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
                 dateText.setText( documentSnapshot.getData().get("date").toString());
+                latitude = (String) documentSnapshot.getData().get("latitude");
+                longitude = (String) documentSnapshot.getData().get("longitude");
+
             }
         });
     }
@@ -196,6 +221,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
+            data.put("latitude", latitude);
+            data.put("longitude", longitude);
+
             if (dateText.getText().toString().equals(selectedEventDate)){
                 eventListReference
                         .document(selectedEventDate)
@@ -294,5 +322,19 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         Log.w("Delete event", "Error deleting document", e);
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 2404) {
+            if(data != null) {
+                latitude = data.getStringExtra("LAT");
+                longitude = data.getStringExtra("LONG");
+
+                Toast.makeText(this,"Selected Location:\nLatitude: " + latitude+"\nLongitude: "+longitude,Toast.LENGTH_SHORT).show();
+
+            }
+        }
     }
 }

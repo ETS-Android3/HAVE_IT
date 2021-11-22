@@ -43,6 +43,10 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      */
     TextView dateText;
     /**
+     *Reference to the pick location button, of class {@link Button}
+     */
+    Button pickLocation;
+    /**
      *Reference to the addEvent button, of class {@link Button}
      */
     Button addEvent;
@@ -50,6 +54,12 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
+
+    /**
+     * Lagitude and Longitude to store the location as String Variable
+     */
+    String latitude = null;
+    String longitude = null;
 
     /**
      *This is the method invoked when the activity starts
@@ -63,6 +73,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
+        pickLocation = findViewById(R.id.pick_location_button);
         addEvent = findViewById(R.id.addevent_button);
 
         Date today = Calendar.getInstance().getTime();
@@ -96,6 +107,16 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 picker.show();
             }
         });
+
+        Intent intent = new Intent(AddEventActivity.this.getApplicationContext(), PickLocationMapsActivity.class);
+        pickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(intent, 2404);
+            }
+        });
+
+
 
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +157,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
+            data.put("latitude", latitude);
+            data.put("longitude", longitude);
             Date startDate = new Date();
             try {
                 startDate = new SimpleDateFormat("yyyy-MM-dd")
@@ -175,6 +198,20 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 2404) {
+            if(data != null) {
+                latitude = data.getStringExtra("LAT");
+                longitude = data.getStringExtra("LONG");
+
+                Toast.makeText(this,"Selected Location:\nLatitude: " + latitude+"\nLongitude: "+longitude,Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 }

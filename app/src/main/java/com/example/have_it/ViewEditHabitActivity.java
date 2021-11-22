@@ -288,6 +288,9 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                                                     HashMap<String, Object> event = new HashMap<>();
                                                     event.put("date", doc.getData().get("date"));
                                                     event.put("event", doc.getData().get("event"));
+                                                    event.put("latitude", doc.getData().get("latitude"));
+                                                    event.put("longitude", doc.getData().get("longitude"));
+
 
                                                     habitListReference.document(selectedTitle).collection("EventList")
                                                             .document((String) doc.getData().get("date"))

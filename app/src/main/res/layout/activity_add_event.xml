@@ -42,6 +42,20 @@
     </TextView>
 
     <Button
+        android:id="@+id/pick_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="114dp"
+        android:layout_marginBottom="338dp"
+        android:text="Pick your Location"
+        app:layout_constraintBottom_toTopOf="@+id/addevent_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date" />
+
+    <Button
         android:id="@+id/addevent_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
