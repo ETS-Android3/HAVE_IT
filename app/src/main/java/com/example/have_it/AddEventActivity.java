@@ -2,6 +2,8 @@ package com.example.have_it;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,11 +25,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  *This is the activity for adding a new event
@@ -42,6 +47,10 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      *Reference to date input, of class {@link TextView}
      */
     TextView dateText;
+    /**
+     *Reference to address, of class {@link TextView}
+     */
+    TextView addressText;
     /**
      *Reference to the pick location button, of class {@link Button}
      */
@@ -73,6 +82,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
+        addressText = findViewById(R.id.address);
         pickLocation = findViewById(R.id.pick_location_button);
         addEvent = findViewById(R.id.addevent_button);
 
@@ -209,7 +219,18 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 latitude = data.getStringExtra("LAT");
                 longitude = data.getStringExtra("LONG");
 
-                Toast.makeText(this,"Selected Location:\nLatitude: " + latitude+"\nLongitude: "+longitude,Toast.LENGTH_SHORT).show();
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                try {
+                    addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    String address = addresses.get(0).getAddressLine(0);
+                    addressText.setText(address);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
