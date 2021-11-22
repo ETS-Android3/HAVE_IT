@@ -15,7 +15,7 @@
         <entry key="app/src/main/res/drawable/ic_round_check_circle_24.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/drawable/ic_round_face_24.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/layout/activity_account_page.xml" value="0.2453125" />
-        <entry key="app/src/main/res/layout/activity_add_event.xml" value="0.2203125" />
+        <entry key="app/src/main/res/layout/activity_add_event.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_add_habit.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_event_page.xml" value="0.2359375" />
         <entry key="app/src/main/res/layout/activity_following_page.xml" value="0.286231884057971" />
@@ -24,7 +24,7 @@
         <entry key="app/src/main/res/layout/activity_indicator.xml" value="0.2203125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15625" />
         <entry key="app/src/main/res/layout/activity_user_register.xml" value="0.2203125" />
-        <entry key="app/src/main/res/layout/activity_view_edit_event.xml" value="0.2203125" />
+        <entry key="app/src/main/res/layout/activity_view_edit_event.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_view_edit_habit.xml" value="0.22" />
         <entry key="app/src/main/res/layout/event_list_content.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_following_request.xml" value="0.13768115942028986" />
