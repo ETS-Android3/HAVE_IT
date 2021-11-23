@@ -45,7 +45,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UserLoginActivity" />
         </activity>
-
         <activity
             android:name=".UserRegisterActivity"
             android:exported="true"
@@ -56,7 +55,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".UserLoginActivity" />
         </activity>
-
         <activity
             android:name=".UserLoginActivity"
             android:exported="true" >
@@ -66,12 +64,10 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
-
         <activity
             android:name=".HabitPageActivity"
             android:exported="true">
         </activity>
-
         <activity
             android:name=".AddHabitActivity"
             android:parentActivityName=".HabitPageActivity">
@@ -81,7 +77,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".HabitPageActivity" />
         </activity>
-
         <activity
             android:name=".ViewEditHabitActivity"
             android:parentActivityName=".HabitPageActivity">
@@ -99,9 +94,8 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".HabitPageActivity" />
+                android:value=".ViewEditHabitActivity" />
         </activity>
-
         <activity
             android:name=".AddEventActivity"
             android:parentActivityName=".EventPageActivity">
@@ -109,9 +103,8 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AddHabitActivity" />
+                android:value=".EventPageActivity" />
         </activity>
-
         <activity
             android:name=".ViewEditEventActivity"
             android:parentActivityName=".EventPageActivity">
@@ -119,7 +112,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AddHabitActivity" />
+                android:value=".EventPageActivity" />
         </activity>
 
         <activity
@@ -154,11 +147,27 @@
             android:parentActivityName=".ViewEditHabitActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AddHabitActivity" />
+                android:value=".ViewEditHabitActivity" />
         </activity>
         <activity
             android:name=".FollowingPageActivity"
             android:exported="true">
+        </activity>
+        <activity
+            android:name=".FollowingHabitPageActivity"
+            android:exported="true"
+            android:parentActivityName=".FollowingPageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FollowingPageActivity" />
+        </activity>
+        <activity
+            android:name=".FollowingIndicatorActivity"
+            android:exported="true"
+            android:parentActivityName=".FollowingHabitPageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FollowingHabitPageActivity" />
         </activity>
         <activity
             android:name=".AccountPageActivity"

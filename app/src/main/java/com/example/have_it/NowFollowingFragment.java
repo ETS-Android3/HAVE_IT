@@ -1,16 +1,15 @@
 package com.example.have_it;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ import javax.annotation.Nullable;
 
 public class NowFollowingFragment extends Fragment implements DatabaseUserReference{
     ListView nowFollowingList;
-    GeneralUserList nowFollowingAdapter;
+    FollowingUserList nowFollowingAdapter;
     ArrayList<GeneralUser> userDataList;
 
 
@@ -30,11 +29,21 @@ public class NowFollowingFragment extends Fragment implements DatabaseUserRefere
         nowFollowingList = view.findViewById(R.id.following_user_list);
 
         userDataList = new ArrayList<>();
-        nowFollowingAdapter = new GeneralUserList(this.getActivity(),userDataList);
+        nowFollowingAdapter = new FollowingUserList(this.getActivity(),userDataList);
         nowFollowingList.setAdapter(nowFollowingAdapter);
 
-        //FollowingController.getNowFollowing(nowFollowingAdapter, userDataList);
+        FollowingController.getNowFollowing(nowFollowingAdapter, userDataList);
 
+        final Intent followingHabitIntent = new Intent (this.getActivity(), FollowingHabitPageActivity.class);
+
+        nowFollowingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                followingHabitIntent.putExtra("UID", userDataList.get(position).getUID());
+                followingHabitIntent.putExtra("name", userDataList.get(position).getName());
+                startActivity(followingHabitIntent);
+            }
+        });
 
         return view;
     }
