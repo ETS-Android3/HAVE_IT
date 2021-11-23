@@ -2,6 +2,8 @@ package com.example.have_it;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,11 +25,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  *This is the activity for adding a new event
@@ -43,6 +48,14 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      */
     TextView dateText;
     /**
+     *Reference to address, of class {@link TextView}
+     */
+    TextView addressText;
+    /**
+     *Reference to the pick location button, of class {@link Button}
+     */
+    Button pickLocation;
+    /**
      *Reference to the addEvent button, of class {@link Button}
      */
     Button addEvent;
@@ -50,6 +63,12 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
+
+    /**
+     * Lagitude and Longitude to store the location as String Variable
+     */
+    String latitude = null;
+    String longitude = null;
 
     /**
      *This is the method invoked when the activity starts
@@ -63,6 +82,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
+        addressText = findViewById(R.id.address);
+        pickLocation = findViewById(R.id.pick_location_button);
         addEvent = findViewById(R.id.addevent_button);
 
         Date today = Calendar.getInstance().getTime();
@@ -96,6 +117,16 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 picker.show();
             }
         });
+
+        Intent intent = new Intent(AddEventActivity.this.getApplicationContext(), PickLocationMapsActivity.class);
+        pickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(intent, 2404);
+            }
+        });
+
+
 
         addEvent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +167,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
+            data.put("latitude", latitude);
+            data.put("longitude", longitude);
             Date startDate = new Date();
             try {
                 startDate = new SimpleDateFormat("yyyy-MM-dd")
@@ -175,6 +208,31 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 2404) {
+            if(data != null) {
+                latitude = data.getStringExtra("LAT");
+                longitude = data.getStringExtra("LONG");
+
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                try {
+                    addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    String address = addresses.get(0).getAddressLine(0);
+                    addressText.setText(address);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 }

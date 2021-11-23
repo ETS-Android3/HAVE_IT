@@ -1,7 +1,10 @@
 package com.example.have_it;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,11 +26,14 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  *This is the activity for edit or delete event
@@ -42,6 +48,14 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
      *Reference to date input, of class {@link EditText}
      */
     TextView dateText;
+    /**
+     *Reference to address, of class {@link TextView}
+     */
+    TextView addressText;
+    /**
+     *Reference to the pick location button, of class {@link Button}
+     */
+    Button changeLocation;
     /**
      *Reference to the confirm button, of class {@link Button}
      */
@@ -64,6 +78,14 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     String selectedHabit;
 
     /**
+     * Lagitude and Longitude to store the location as String Variable
+     */
+    String latitude = null;
+    String longitude = null;
+
+    Context context;
+
+    /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
      */
@@ -74,6 +96,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         Intent i = getIntent();
         selectedEventDate = i.getStringExtra("event_date");
         selectedHabit = i.getStringExtra("habit");
+        context = this;
 
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -81,10 +104,13 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 .document(selectedHabit).collection("EventList");
         eventText = findViewById(R.id.event_editText_viewedit);
         dateText = findViewById(R.id.event_date_viewedit);
+        addressText = findViewById(R.id.address);
+        changeLocation = findViewById(R.id.change_location_button);
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
 
         getDocument();
+
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +137,18 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                             }
                         }, year, month, day);
                 picker.show();
+            }
+        });
+
+
+
+        Intent intent = new Intent(ViewEditEventActivity.this.getApplicationContext(), ChangeLocationMapsActivity.class);
+        changeLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent.putExtra("LAT", latitude);
+                intent.putExtra("LONG",longitude);
+                startActivityForResult(intent, 2404);
             }
         });
 
@@ -176,6 +214,28 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 //  SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
                 //DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
                 dateText.setText( documentSnapshot.getData().get("date").toString());
+                latitude = (String) documentSnapshot.getData().get("latitude");
+                longitude = (String) documentSnapshot.getData().get("longitude");
+
+                if(latitude != null){
+                    Geocoder geocoder;
+                    List<Address> addresses;
+                    geocoder = new Geocoder(context, Locale.getDefault());
+
+                    try {
+                        addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        String address = addresses.get(0).getAddressLine(0);
+                        addressText.setText(address);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    addressText.setText("No location selected");
+
+                }
+
+
             }
         });
     }
@@ -196,6 +256,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
+            data.put("latitude", latitude);
+            data.put("longitude", longitude);
+
             if (dateText.getText().toString().equals(selectedEventDate)){
                 eventListReference
                         .document(selectedEventDate)
@@ -294,5 +357,29 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         Log.w("Delete event", "Error deleting document", e);
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 2404) {
+            if(data != null) {
+                latitude = data.getStringExtra("LAT");
+                longitude = data.getStringExtra("LONG");
+
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                try {
+                    addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    String address = addresses.get(0).getAddressLine(0);
+                    addressText.setText(address);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
