@@ -36,6 +36,36 @@
 
     </TextView>
 
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="286dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="44dp"
+        android:ems="10"
+        android:minHeight="48dp"
+        android:text="No Location Selected"
+        android:gravity="center"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_date_viewedit"
+        tools:ignore="MissingConstraints">
+
+    </TextView>
+
+    <Button
+        android:id="@+id/change_location_button"
+        android:layout_width="105dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="44dp"
+        android:text="Choose"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/address"
+        app:layout_constraintTop_toBottomOf="@+id/event_date_viewedit" />
+
+
+
     <Button
         android:id="@+id/confirm_button_viewedit"
         android:layout_width="130dp"

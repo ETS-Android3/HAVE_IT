@@ -2,6 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.have_it">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--    ACCESS_COARSE_LOCATION is used -->
+    <!--    when we use network location provider for our Android app-->
+
+    <!--    ACCESS_FINE_LOCATION is providing permission for both providers-->
+
+    <!--    INTERNET permission is must for the use of network provider.-->
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,6 +29,12 @@
         <!--            android:name="android.support.PARENT_ACTIVITY"-->
         <!--            android:value=".EventPageActivity" />-->
         <!--        </activity>-->
+
+<!--        Use Google Cloud Platform to generate a API key to use google map-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCXIGOQHN7oakK-C3W_cU-khcyqVTmoy10" />
+
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="true"
@@ -97,6 +114,33 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".EventPageActivity" />
         </activity>
+
+        <activity
+            android:name=".PickLocationMapsActivity"
+            android:parentActivityName=".AddEventActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".ChangeLocationMapsActivity"
+            android:parentActivityName=".ViewEditEventActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
         <activity
             android:name=".IndicatorActivity"
             android:exported="true"

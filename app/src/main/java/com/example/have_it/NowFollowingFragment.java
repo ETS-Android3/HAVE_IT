@@ -20,6 +20,7 @@ public class NowFollowingFragment extends Fragment implements DatabaseUserRefere
     FollowingUserList nowFollowingAdapter;
     ArrayList<GeneralUser> userDataList;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
