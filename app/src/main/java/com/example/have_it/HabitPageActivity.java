@@ -142,32 +142,10 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
      */
     @Override
     public void getCollection() {
+
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
+        HabitController.getCollectionHabit(habitListReference,habitDataList,habitAdapter,todayHabitDataList,todayHabitAdapter);
 
-        habitListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                habitDataList.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    String title = (String) doc.getData().get("title");
-                    String reason = (String) doc.getData().get("reason");
-                    Timestamp startTimestamp = (Timestamp) doc.getData().get("dateStart");
-                    Date dateStart = startTimestamp.toDate();
-                    List<Boolean> weekdayRegArray = (List<Boolean>) doc.getData().get("weekdayReg");
-                    Boolean publicity = (Boolean) doc.getData().get("publicity");
-                    habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray, publicity));
-                }
-                habitAdapter.notifyDataSetChanged();
-                todayHabitDataList.clear();
-                ArrayList<Habit> todayTemp = habitAdapter.getTodayHabits();
-                for (Habit each : todayTemp){
-                    todayHabitDataList.add(each);
-                }
-                todayHabitAdapter.notifyDataSetChanged();
-            }
-        });
     }
 }

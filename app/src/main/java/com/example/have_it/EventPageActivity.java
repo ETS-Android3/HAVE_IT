@@ -109,20 +109,8 @@ public class EventPageActivity extends AppCompatActivity implements FirestoreGet
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
                 .document(selectedTitle).collection("EventList");
+        EventController.getCollectionEvent(eventListReference,eventAdapter,eventDataList);
 
-        eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) {
-                eventDataList.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
-                    String event = (String) doc.getData().get("event");
-                    String sDate = (String) doc.getData().get("date");
-                    eventDataList.add(new Event(event,sDate));
-                }
-                eventAdapter.notifyDataSetChanged();
-            }
-        });
+
     }
 }
