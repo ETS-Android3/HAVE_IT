@@ -35,19 +35,10 @@ reference: https://stackoverflow.com/questions/16748872/height-half-fill-parent-
                 android:textColor="#FFFFFF"
                 android:textSize="30sp" />
 
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/today_habits"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_weight="0.1"
-                android:background="#00FFFFFF">
-
-                <ListView
-                    android:id="@+id/today_habit_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
@@ -72,14 +63,10 @@ reference: https://stackoverflow.com/questions/16748872/height-half-fill-parent-
                 android:layout_weight="0.1"
                 android:background="#00FFFFFF">
 
-                <ListView
-                    android:id="@+id/all_habit_list"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/all_habits"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    android:layout_height="match_parent" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/add_habit_button"
@@ -106,11 +93,11 @@ reference: https://stackoverflow.com/questions/16748872/height-half-fill-parent-
         android:orientation="vertical"
         android:background="#00FFFFFF">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        app:menu="@menu/bottom_nav_menu" />
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            app:menu="@menu/bottom_nav_menu" />
 
     </LinearLayout>
 
