@@ -35,10 +35,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +61,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     public static final int CAMERA_PREM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
+    private StorageReference storageReference;
+    FirebaseAuth fAuth;
     String currentPhotoPath;
     /**
      *Reference to event input, of class {@link EditText}
@@ -85,6 +92,17 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
+        fAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        /**
+        StorageReference eventImageRef = storageReference.child("eventsPhoto/"+fAuth.getCurrentUser().getUid()+"/event.jpg");
+        eventImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(selectedImage);
+            }
+        });
+         */
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
@@ -175,12 +193,16 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
-                selectedImage.setImageURI(Uri.fromFile(f));
+                //selectedImage.setImageURI(Uri.fromFile(f));
 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
+
+                //uploadImageToFirebase(f.getName(),contentUri);
+                uploadImageToFirebase(contentUri);
+
             }
         }
         if (requestCode == GALLERY_REQUEST_CODE) {
@@ -188,12 +210,40 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                Uri contentUri = data.getData();
                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-               selectedImage.setImageURI(contentUri);
+               //selectedImage.setImageURI(contentUri);
+               //uploadImageToFirebase(imageFileName,contentUri);
+                uploadImageToFirebase(contentUri);
+
             }
         }
 
 
     }
+
+    private void uploadImageToFirebase( Uri contentUri) {
+        String eventName = eventText.getText().toString();
+        final StorageReference image = storageReference.child("eventPhotos/"+fAuth.getCurrentUser().getUid()+"/"+eventName+".jpg");
+        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(selectedImage);
+                    }
+                });
+
+                Toast.makeText(AddEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(AddEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private String getFileExt(Uri contentUri){
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
