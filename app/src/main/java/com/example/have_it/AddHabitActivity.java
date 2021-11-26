@@ -1,6 +1,7 @@
 package com.example.have_it;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -69,6 +70,8 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
      */
     Switch publicitySwitch;
 
+    int count;
+
     /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
@@ -77,6 +80,11 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit);
+
+        Intent intent = getIntent();
+        count = intent.getIntExtra("order", 0);
+
+
 
         titleText = findViewById(R.id.habit_title_editText);
         reasonText = findViewById(R.id.habit_reason_editText);
@@ -182,10 +190,43 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
             data.put("dateStart", startDateTimestamp);
             data.put("weekdayReg", weekdayReg);
             data.put("publicity", publicity);
-            HabitController.addHabit(data,habitListReference,title);
-            finish();
+            data.put("order", count);
 
+            habitListReference
+                    .document(title)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    Toast.makeText(getApplicationContext(),"cannot add because the habit with same title exists", Toast.LENGTH_LONG).show();
+                                } else {
+                                    habitListReference
+                                            .document(title)
+                                            .set(data)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // These are a method which gets executed when the task is succeeded
+                                                    Log.d("Adding Habit", "Habit data has been added successfully!");
 
+                                                    finish();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // These are a method which gets executed if there’s any problem
+                                                    Log.d("Adding Habit", "Habit data could not be added!" + e.toString());
+                                                    Toast.makeText(getApplicationContext(),"Not being able to add data, please check duplication title", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
         }
     }
 }
