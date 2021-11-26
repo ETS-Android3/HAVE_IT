@@ -1,6 +1,7 @@
 package com.example.have_it;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -69,6 +70,8 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
      */
     Switch publicitySwitch;
 
+    int count;
+
     /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
@@ -77,6 +80,11 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit);
+
+        Intent intent = getIntent();
+        count = intent.getIntExtra("order", 0);
+
+
 
         titleText = findViewById(R.id.habit_title_editText);
         reasonText = findViewById(R.id.habit_reason_editText);
@@ -182,6 +190,7 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
             data.put("dateStart", startDateTimestamp);
             data.put("weekdayReg", weekdayReg);
             data.put("publicity", publicity);
+            data.put("order", count);
 
             habitListReference
                     .document(title)
@@ -202,6 +211,7 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
                                                 public void onSuccess(Void aVoid) {
                                                     // These are a method which gets executed when the task is succeeded
                                                     Log.d("Adding Habit", "Habit data has been added successfully!");
+
                                                     finish();
                                                 }
                                             })

@@ -1,8 +1,5 @@
 package com.example.have_it;
 
-/**
- *
- */
 public class GeneralUser {
     private String UID;
     private String name;
