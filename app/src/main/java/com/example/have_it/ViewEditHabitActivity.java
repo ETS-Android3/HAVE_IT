@@ -1,6 +1,7 @@
 package com.example.have_it;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +28,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -88,6 +88,10 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
      */
     String selectedTitle;
 
+    Integer count;
+    Context context;
+
+
     /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
@@ -96,6 +100,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_edit_habit);
+        context = this.getApplicationContext();
 
         titleText = findViewById(R.id.habit_title_editText_viewedit);
         reasonText = findViewById(R.id.habit_reason_editText_viewedit);
@@ -106,8 +111,8 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
         eventList = findViewById(R.id.event_list_button);
         publicitySwitch = findViewById(R.id.publicity_switch_viewedit);
 
-        Intent i = getIntent();
-        selectedTitle = i.getStringExtra("habit");
+        Intent intent = getIntent();
+        selectedTitle = intent.getStringExtra("habit");
 
         getDocument();
 
@@ -230,6 +235,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
             data.put("dateStart", startDateTimestamp);
             data.put("weekdayReg", weekdayReg);
             data.put("publicity", publicity);
+            data.put("order", count);
 
 
             if (title.equals(selectedTitle)) {
@@ -374,6 +380,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                 startDateText.setText(spf.format(((Timestamp) documentSnapshot.getData().get("dateStart")).toDate()));
 
                 List<Integer> weekdayReg = new ArrayList<>(7);
+                count = Integer.valueOf(String.valueOf(documentSnapshot.getData().get("order")));
 
                 Integer c = 1;
                 for (boolean each : (ArrayList<Boolean>) documentSnapshot.getData().get("weekdayReg")) {
@@ -400,6 +407,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                 .document(logged.getUID()).collection("HabitList")
                 .document(selectedTitle).collection("EventList");
 
+
         habitListReference.document(selectedTitle)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -415,6 +423,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                     }
                 });
 
+
         eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
@@ -427,6 +436,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                 }
             }
         });
+
         finish();
     }
 }

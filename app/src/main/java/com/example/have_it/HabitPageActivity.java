@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,12 +19,12 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,19 +36,19 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
     /**
      *A reference to today habit list view, of class {@link ListView}
      */
-    ListView todayHabitList;
+    RecyclerView todayHabitList;
     /**
      *A reference to all habit list view, of class {@link ListView}
      */
-    ListView habitList;
+    RecyclerView habitList;
     /**
      *habit adapter, of class {@link HabitList}
      */
-    HabitList habitAdapter;
+    HabitAdapter habitAdapter;
     /**
      *today habit adapter, of class {@link HabitList}
      */
-    HabitList todayHabitAdapter;
+    HabitAdapter todayHabitAdapter;
     /**
      *habit data list, of class {@link ArrayList}
      */
@@ -64,6 +66,7 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
      */
     public static final String EXTRA_MESSAGE = "com.example.have_it.MESSAGE";
 
+
     /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
@@ -73,45 +76,41 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habit_homepage);
 
-        habitList = findViewById(R.id.all_habit_list);
-        todayHabitList = findViewById(R.id.today_habit_list);
+        habitList = findViewById(R.id.all_habits);
+        todayHabitList = findViewById(R.id.today_habits);
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.habit_menu);
 
-        final FloatingActionButton addHabitButton = findViewById(R.id.add_habit_button);
-        final Intent addHabitIntent = new Intent(this, AddHabitActivity.class);
-        addHabitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(addHabitIntent);
-            }
-        });
 
         habitDataList = new ArrayList<>();
-        habitAdapter = new HabitList(this, habitDataList);
+        habitAdapter = new HabitAdapter(this, habitDataList);
         todayHabitDataList = new ArrayList<>();
-        todayHabitAdapter = new HabitList(this, todayHabitDataList);
+        todayHabitAdapter = new HabitAdapter(this, todayHabitDataList);
+
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        habitList.setLayoutManager(linearLayoutManager1);
+
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        todayHabitList.setLayoutManager(linearLayoutManager2);
 
         habitList.setAdapter(habitAdapter);
         todayHabitList.setAdapter(todayHabitAdapter);
 
         getCollection();
 
-        final Intent viewEditHabitIntent = new Intent(this, ViewEditHabitActivity.class);
-        habitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                viewEditHabitIntent.putExtra("habit", habitDataList.get(position).getTitle());
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(habitList);
 
-                startActivity(viewEditHabitIntent);
-            }
-        });
-        todayHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final FloatingActionButton addHabitButton = findViewById(R.id.add_habit_button);
+        final Intent addHabitIntent = new Intent(this, AddHabitActivity.class);
+        addHabitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                viewEditHabitIntent.putExtra("habit", todayHabitDataList.get(position).getTitle());
+            public void onClick(View v) {
 
-                startActivity(viewEditHabitIntent);
+                addHabitIntent.putExtra("order", habitAdapter.getItemCount());
+                upLoad();
+                habitDataList.clear();
+                startActivity(addHabitIntent);
             }
         });
 
@@ -124,11 +123,15 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
 
                     case R.id.following_menu:
                         final Intent followingIntent = new Intent(HabitPageActivity.this, FollowingPageActivity.class);
+                        upLoad();
+                        habitDataList.clear();
                         startActivity(followingIntent);
                         break;
 
                     case R.id.account_menu:
                         final Intent accountIntent = new Intent(HabitPageActivity.this, AccountPageActivity.class);
+                        upLoad();
+                        habitDataList.clear();
                         startActivity(accountIntent);
                         break;
                 }
@@ -145,11 +148,12 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
 
-        habitListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        habitListReference.orderBy("order").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) {
                 habitDataList.clear();
+
                 for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
                 {
                     String title = (String) doc.getData().get("title");
@@ -159,15 +163,50 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
                     List<Boolean> weekdayRegArray = (List<Boolean>) doc.getData().get("weekdayReg");
                     Boolean publicity = (Boolean) doc.getData().get("publicity");
                     habitDataList.add(new Habit(title,reason,dateStart, (ArrayList<Boolean>) weekdayRegArray, publicity));
+
                 }
                 habitAdapter.notifyDataSetChanged();
+
                 todayHabitDataList.clear();
                 ArrayList<Habit> todayTemp = habitAdapter.getTodayHabits();
                 for (Habit each : todayTemp){
                     todayHabitDataList.add(each);
                 }
+
                 todayHabitAdapter.notifyDataSetChanged();
+
             }
         });
+    }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            Collections.swap(habitDataList, fromPosition, toPosition);
+            recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
+
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
+
+
+    public void upLoad() {
+
+        final CollectionReference habitListReference = db.collection("Users")
+                .document(logged.getUID()).collection("HabitList");
+
+        for(Habit habit: habitDataList){
+            habitListReference.document(habit.getTitle())
+                    .update("order", habitDataList.indexOf(habit));
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.have_it;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,9 +39,10 @@ import java.util.Locale;
 
 /**
  *This is the activity for adding a new event
- * @author songkunguo
+ * @author songkunguo & ruiqingtian
  */
 public class AddEventActivity extends AppCompatActivity implements FirestoreAddData, DatabaseUserReference{
+
     /**
      *Reference to event input, of class {@link EditText}
      */
@@ -70,6 +74,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     String latitude = null;
     String longitude = null;
 
+    Context context;
+
     /**
      *This is the method invoked when the activity starts
      * @param savedInstanceState {@link Bundle} used for its super class
@@ -79,6 +85,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
+        context = this.getApplicationContext();
 
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
@@ -89,6 +96,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         Date today = Calendar.getInstance().getTime();
         String todayAsString = new SimpleDateFormat("yyyy-MM-dd").format(today);
         dateText.setText(todayAsString);
+
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +133,6 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 startActivityForResult(intent, 2404);
             }
         });
-
 
 
         addEvent.setOnClickListener(new View.OnClickListener() {
@@ -219,17 +226,15 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 latitude = data.getStringExtra("LAT");
                 longitude = data.getStringExtra("LONG");
 
-                Geocoder geocoder;
-                List<Address> addresses;
-                geocoder = new Geocoder(this, Locale.getDefault());
-
+                Geocoder geocoder = new Geocoder(context, Locale.getDefault());
                 try {
-                    addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    List<Address> addresses = geocoder.getFromLocation(Double.valueOf(latitude), Double.valueOf(longitude), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                     String address = addresses.get(0).getAddressLine(0);
                     addressText.setText(address);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(context,String.valueOf(e),Toast.LENGTH_SHORT).show();
+
                 }
 
             }
