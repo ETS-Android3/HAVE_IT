@@ -88,10 +88,10 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
     private StorageReference storageReference;
-    FirebaseAuth fAuth;
     String currentPhotoPath;
     ImageView selectedImage;
     ImageButton cameraBtn, galleryBtn;
+    Uri contentUri;
 
     /**
      *This is the method invoked when the activity starts
@@ -118,7 +118,6 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         selectedImage = findViewById(R.id.displayImageView);
         galleryBtn = findViewById(R.id.galleryBtn);
         cameraBtn = findViewById(R.id.cameraBtn);
-        fAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
 
@@ -225,8 +224,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 eventText.setText((String)documentSnapshot.getData().get("event"));
-                String eventName = (String)documentSnapshot.getData().get("event");
-                StorageReference eventImageRef = storageReference.child("eventPhotos/"+fAuth.getCurrentUser().getUid()+"/"+eventName+".jpg");
+                String event = (String)documentSnapshot.getData().get("event");
+                String date = (String)documentSnapshot.getData().get("date");
+                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+event+"/"+date+".jpg");
                 eventImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -239,13 +239,33 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         Toast.makeText(ViewEditEventActivity.this, word, Toast.LENGTH_SHORT).show();
                     }
                 });
-                //  SimpleDateFormat spf= new SimpleDateFormat("yyyy-MM-dd");
-                //DateText.setText(spf.format(((Timestamp)documentSnapshot.getData().get("date")).toDate()));
+
                 dateText.setText( documentSnapshot.getData().get("date").toString());
             }
         });
     }
+    private void uploadImageToFirebase( String event, String date, Uri contentUri) {
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+event+"/"+date+".jpg");
+        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(selectedImage);
+                    }
+                });
 
+                Toast.makeText(ViewEditEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ViewEditEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
     /**
      * This is the method for adding data to the firestore
      */
@@ -257,6 +277,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 .document(selectedHabit).collection("EventList");
         // Retrieving the city name and the province name from the EditText fields
         final String event = eventText.getText().toString();
+        //String date = dateText.getText().toString();
         HashMap<String, Object> data = new HashMap<>();
 
         if (event.length()>0){
@@ -269,6 +290,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+
                                 Log.d("Edit Habit", "Habit data has been deleted successfully!");
                                 finish();
                             }
@@ -315,7 +337,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         // These are a method which gets executed when the task is succeeded
+
                                                         Log.d("Adding event", "event data has been edited successfully!");
+
                                                         finish();
                                                     }
                                                 })
@@ -327,11 +351,13 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                                         Toast.makeText(getApplicationContext(), "Not being able to edit data, please check duplication event", Toast.LENGTH_LONG).show();
                                                     }
                                                 });
+
                                     }
                                 }
                             }
                         });
-            }
+                 }
+
         }
     }
 
@@ -350,7 +376,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        
+
                         //delete photo
                         Log.d("Delete Event", "Habit data has been deleted successfully!");
                         finish();
@@ -392,58 +418,30 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
-                //selectedImage.setImageURI(Uri.fromFile(f));
+                selectedImage.setImageURI(Uri.fromFile(f));
 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
 
-                //uploadImageToFirebase(f.getName(),contentUri);
-                uploadImageToFirebase(contentUri);
+
+
             }
         }
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri contentUri = data.getData();
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                //String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-                //selectedImage.setImageURI(contentUri);
-                uploadImageToFirebase(contentUri);
+                selectedImage.setImageURI(contentUri);
+
             }
         }
 
 
     }
 
-    private void uploadImageToFirebase( Uri contentUri) {
-        final StorageReference image = storageReference.child("eventsPhoto/"+fAuth.getCurrentUser().getUid()+"/event.jpg");
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(selectedImage);
-                    }
-                });
 
-                Toast.makeText(ViewEditEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ViewEditEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-    }
-
-    private String getFileExt(Uri contentUri){
-        ContentResolver c = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
 
     /**
      * save photo on the gallery

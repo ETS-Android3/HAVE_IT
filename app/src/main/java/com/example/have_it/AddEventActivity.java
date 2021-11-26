@@ -62,8 +62,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
     private StorageReference storageReference;
-    FirebaseAuth fAuth;
     String currentPhotoPath;
+    Uri contentUri;
     /**
      *Reference to event input, of class {@link EditText}
      */
@@ -92,7 +92,6 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
-        fAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         /**
         StorageReference eventImageRef = storageReference.child("eventsPhoto/"+fAuth.getCurrentUser().getUid()+"/event.jpg");
@@ -193,36 +192,32 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
-                //selectedImage.setImageURI(Uri.fromFile(f));
+
 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri contentUri = Uri.fromFile(f);
+                contentUri = Uri.fromFile(f);
+                selectedImage.setImageURI(contentUri);
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
 
                 //uploadImageToFirebase(f.getName(),contentUri);
-                uploadImageToFirebase(contentUri);
+
 
             }
         }
         if (requestCode == GALLERY_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-               Uri contentUri = data.getData();
-               String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-               String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
-               //selectedImage.setImageURI(contentUri);
-               //uploadImageToFirebase(imageFileName,contentUri);
-                uploadImageToFirebase(contentUri);
-
+               contentUri = data.getData();
+               selectedImage.setImageURI(contentUri);
+               //uploadImageToFirebase(contentUri);
             }
         }
 
 
     }
 
-    private void uploadImageToFirebase( Uri contentUri) {
-        String eventName = eventText.getText().toString();
-        final StorageReference image = storageReference.child("eventPhotos/"+fAuth.getCurrentUser().getUid()+"/"+eventName+".jpg");
+    private void uploadImageToFirebase( String event, String date, Uri contentUri) {
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+event+"/"+date+".jpg");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -322,6 +317,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                     .document(logged.getUID()).collection("HabitList")
                     .document(selectedTitle).collection("EventList");
             final String event = eventText.getText().toString();
+            String date = dateText.getText().toString();
             HashMap<String, Object> data = new HashMap<>();
 
             if (event.length() > 0) {
@@ -351,6 +347,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                                             public void onSuccess(Void aVoid) {
                                                 // These are a method which gets executed when the task is succeeded
                                                 Log.d("Adding event", "event data has been added successfully!");
+                                                uploadImageToFirebase(event,date,contentUri);
                                                 finish();
                                             }
                                         })
