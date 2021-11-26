@@ -4,12 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,12 +26,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class PickLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
@@ -85,8 +88,9 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
                     public void onMapClick(@NonNull LatLng latLng) {
                         mMap.clear();
                         addButton.setVisibility(View.INVISIBLE);
+//                        latitude = String.valueOf(latLng.latitude);
+//                        longitude = String.valueOf(latLng.longitude);
                         mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Your Selected Location!"));
-
                     }
                 });
 
@@ -103,12 +107,12 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
                 addButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+//                        Toast.makeText(context,"Latitude: " + latitude +"\nLongitude: "+longitude,Toast.LENGTH_SHORT).show();
                         addButton.setVisibility(View.INVISIBLE);
                         Intent intent = new Intent();
                         intent.putExtra("LAT", latitude);
                         intent.putExtra("LONG", longitude);
                         setResult(RESULT_OK, intent);
-//                        Toast.makeText(context,"Latitude: " + latitude +"\nLongitude: "+longitude,Toast.LENGTH_SHORT).show();
                         finish();
 
                     }
