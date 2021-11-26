@@ -145,8 +145,10 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
      */
     @Override
     public void getCollection() {
+
         final CollectionReference habitListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList");
+        HabitController.getCollectionHabit(habitListReference,habitDataList,habitAdapter,todayHabitDataList,todayHabitAdapter);
 
         habitListReference.orderBy("order").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

@@ -99,8 +99,9 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
      * Also check password and email validity, and notify the user error inputs.
      */
     private void userLogin() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
+       String email = editTextEmail.getText().toString().trim();
+       String password = editTextPassword.getText().toString().trim();
+
 
 
         if(email.isEmpty()){

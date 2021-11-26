@@ -239,126 +239,14 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
 
 
             if (title.equals(selectedTitle)) {
-                habitListReference.document(selectedTitle)
-                        .update(data)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("Edit Habit", "Habit data has been deleted successfully!");
-                                finish();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("Edit Habit", "Error deleting document", e);
-                            }
-                        });
+                HabitController.updateHabitWithSameTitle(habitListReference,selectedTitle,data);
+                finish();
+
             } else {
-
-                habitListReference
-                        .document(title)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.exists()) {
-                                        Toast.makeText(getApplicationContext(), "cannot edit because the habit with same title exists", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        habitListReference
-                                                .document(title)
-                                                .set(data)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        // These are a method which gets executed when the task is succeeded
-                                                        Log.d("Adding Habit", "Habit data has been edited successfully!");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        // These are a method which gets executed if there’s any problem
-                                                        Log.d("Adding Habit", "Habit data could not be edited!" + e.toString());
-                                                        Toast.makeText(getApplicationContext(), "Not being able to edit data, please check duplication title", Toast.LENGTH_LONG).show();
-                                                    }
-                                                });
-
-                                        eventListReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                                                    FirebaseFirestoreException error) {
-                                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                                    HashMap<String, Object> event = new HashMap<>();
-                                                    event.put("date", doc.getData().get("date"));
-                                                    event.put("event", doc.getData().get("event"));
-                                                    event.put("latitude", doc.getData().get("latitude"));
-                                                    event.put("longitude", doc.getData().get("longitude"));
+                HabitController.updateHabitWithDifferentTitle( habitListReference,  eventListReference, selectedTitle , title, data);
+                finish();
 
 
-                                                    habitListReference.document(selectedTitle).collection("EventList")
-                                                            .document((String) doc.getData().get("date"))
-                                                            .delete()
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    Log.d("Delete event", "event data has been deleted successfully!");
-
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    Log.w("Delete event", "Error deleting document", e);
-                                                                }
-                                                            });
-
-
-                                                    habitListReference.document(title).collection("EventList")
-                                                            .document((String) doc.getData().get("date"))
-                                                            .set(event)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    // These are a method which gets executed when the task is succeeded
-                                                                    Log.d("Adding event", "Habit data has been edited successfully!");
-
-                                                                }
-                                                            })
-                                                            .addOnFailureListener(new OnFailureListener() {
-                                                                @Override
-                                                                public void onFailure(@NonNull Exception e) {
-                                                                    // These are a method which gets executed if there’s any problem
-                                                                    Log.d("Adding event", "Habit data could not be edited!" + e.toString());
-                                                                    Toast.makeText(getApplicationContext(), "Not being able to edit data, please check duplication title", Toast.LENGTH_LONG).show();
-                                                                }
-                                                            });
-
-
-                                                }
-                                            }
-                                        });
-                                        habitListReference.document(selectedTitle)
-                                                .delete()
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d("Delete Habit", "Habit data has been deleted successfully!");
-                                                        finish();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("Delete Habit", "Error deleting document", e);
-                                                    }
-                                                });
-                                    }
-                                }
-                            }
-                        });
             }
         }
     }
@@ -406,7 +294,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
                 .document(selectedTitle).collection("EventList");
-
+        HabitController.deleteHabit(habitListReference, eventListReference,selectedTitle);
 
         habitListReference.document(selectedTitle)
                 .delete()
@@ -436,7 +324,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                 }
             }
         });
-
         finish();
     }
 }

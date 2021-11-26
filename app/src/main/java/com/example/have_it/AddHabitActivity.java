@@ -227,7 +227,6 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
                             }
                         }
                     });
-
         }
     }
 }
