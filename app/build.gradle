@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.have_it"
-        minSdkVersion 21
-        targetSdkVersion 31
+        minSdkVersion 19
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.0.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.0.1'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -68,5 +69,7 @@ dependencies {
     //for compact calendar
     implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
     //for icons
+    //noinspection GradleCompatible,GradleCompatible
     implementation 'com.android.support:appcompat-v7:23.2.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
