@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:rotationX="2">
 
     <EditText
         android:id="@+id/habit_title_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_width="277dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
         android:hint="Habit title"
         android:inputType="none"
         android:maxLength="20"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </EditText>
 
     <EditText
         android:id="@+id/habit_reason_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="275dp"
+        android:layout_height="49dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:hint="Habit reason"
@@ -32,25 +32,23 @@
         android:maxLength="30"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habit_title_editText">
 
     </EditText>
 
     <TextView
         android:id="@+id/habit_start_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_width="279dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
+        android:gravity="center|left"
         android:hint="Habit start date"
         android:inputType="date"
         android:minHeight="48dp"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/habit_reason_editText">
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
 
     </TextView>
 
@@ -58,13 +56,14 @@
         android:id="@+id/habit_weekday_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="84dp"
         android:ems="10"
         android:hint="Habit weekday selection"
         android:minHeight="24dp"
         android:text="Habit weekday selection"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habit_start_date">
 
@@ -74,8 +73,9 @@
         android:id="@+id/habit_weekday_selection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habit_weekday_title"
         app:sunday_first_day="false" />
@@ -92,15 +92,61 @@
 
     <Switch
         android:id="@+id/publicity_switch"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_width="378dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="44dp"
         android:text="Public"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/add_habit_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.567"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habit_weekday_selection"
+        app:layout_constraintVertical_bias="0.012"
         tools:ignore="TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="121dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center|left"
+
+        android:text="Habit Title:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/habit_title_editText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="121dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center|left"
+        android:text="Habit Reason:"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/habit_reason_editText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="118dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="80dp"
+        android:gravity="center|left"
+        android:text="Start Date:"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/habit_weekday_title"
+        app:layout_constraintEnd_toStartOf="@+id/habit_start_date"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintVertical_bias="0.948" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

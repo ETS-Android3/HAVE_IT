@@ -8,31 +8,34 @@
 
     <EditText
         android:id="@+id/event_editText_viewedit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_width="230dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="Event comment"
+        android:gravity="center|left"
         android:inputType="none"
         android:maxLength="20"
         android:textSize="20sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </EditText>
 
     <TextView
         android:id="@+id/event_date_viewedit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_width="230dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
         android:hint="event  date"
+        android:gravity="center|left"
         android:inputType="date"
         android:minHeight="48dp"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/event_editText_viewedit"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_editText_viewedit">
 
     </TextView>
 
@@ -86,6 +89,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="20dp"
+        android:text="Event Comment:"
+        android:textSize="20sp"
+        android:gravity="center|left"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
+        app:layout_constraintEnd_toStartOf="@+id/event_editText_viewedit"
+        app:layout_constraintHorizontal_bias="0.259"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.625" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="44dp"
+        android:text="Event Date:"
+        android:gravity="center|left"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/address"
+        app:layout_constraintEnd_toStartOf="@+id/event_date_viewedit"
+        app:layout_constraintHorizontal_bias="0.363"
         app:layout_constraintStart_toStartOf="parent" />
 
 

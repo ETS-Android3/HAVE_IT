@@ -9,24 +9,30 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="match_parent"
+        android:layout_width="424dp"
         android:layout_height="wrap_content"
         android:background="#3F51B5"
         android:text="Pending Following Requests"
         android:textColor="#FFFFFF"
         android:textSize="30sp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:text="By confirming or rejecting the request, it will be removed from the list" />
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="619dp"
         android:layout_weight="0.1"
-        android:background="#00FFFFFF">
+        android:background="#00FFFFFF"
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/following_request_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="703dp" />
 
     </LinearLayout>
 

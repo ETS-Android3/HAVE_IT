@@ -16,18 +16,26 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="By confirming the reply, it will be removed from the list" />
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_weight="0.1"
         android:background="#00FFFFFF">
 
-        <ListView
-            android:id="@+id/following_request_reply_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <ListView
+                android:id="@+id/following_request_reply_list"
+                android:layout_width="match_parent"
+                android:layout_height="443dp" />
 
-    </LinearLayout>
+
+
+        </LinearLayout>
 
 </LinearLayout>
