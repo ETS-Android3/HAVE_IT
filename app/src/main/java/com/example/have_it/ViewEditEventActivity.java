@@ -1,22 +1,33 @@
 package com.example.have_it;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,7 +36,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -84,6 +100,14 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     String longitude = null;
 
     Context context;
+    public static final int CAMERA_PREM_CODE = 101;
+    public static final int CAMERA_REQUEST_CODE =102;
+    public static final int GALLERY_REQUEST_CODE=105;
+    private StorageReference storageReference;
+    String currentPhotoPath;
+    ImageView selectedImage;
+    ImageButton cameraBtn, galleryBtn;
+    Uri contentUri;
 
     /**
      *This is the method invoked when the activity starts
@@ -108,8 +132,27 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         changeLocation = findViewById(R.id.change_location_button);
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
+        storageReference = FirebaseStorage.getInstance().getReference();
+        selectedImage = findViewById(R.id.displayImageView);
+        galleryBtn = findViewById(R.id.galleryBtn);
+        cameraBtn = findViewById(R.id.cameraBtn);
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         getDocument();
+        cameraBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                askCameraPermissions();
+            }
+        });
+        galleryBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(gallery, GALLERY_REQUEST_CODE);
+            }
+        });
+
 
 
         dateText.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +204,23 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                Intent i = getIntent();
+                                String selectedTitle = i.getStringExtra("habit");
+                                // Create a reference to the file to delete
+                                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+eventText.getText().toString()+dateText.getText().toString()+".jpg");
+
+                                // Delete the file
+                                eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // File deleted successfully
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Uh-oh, an error occurred!
+                                    }
+                                });
                                 Log.d("Delete Event", "Habit data has been deleted successfully!");
                                 finish();
                             }
@@ -171,6 +231,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                 Log.w("Delete event", "Error deleting document", e);
                             }
                         });
+
             }
         });
 
@@ -207,6 +268,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 .collection("HabitList")
                 .document(selectedHabit).collection("EventList");
 
+
         eventListReference.document(selectedEventDate).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -216,6 +278,21 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 dateText.setText( documentSnapshot.getData().get("date").toString());
                 latitude = (String) documentSnapshot.getData().get("latitude");
                 longitude = (String) documentSnapshot.getData().get("longitude");
+                Intent i = getIntent();
+                String selectedTitle = i.getStringExtra("habit");
+                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+eventText.getText().toString()+dateText.getText().toString()+".jpg");
+                eventImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(selectedImage);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        String word = eventText.getText().toString()+".jpg";
+                        Toast.makeText(ViewEditEventActivity.this, word, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 if(latitude != null){
                     Geocoder geocoder;
@@ -252,12 +329,14 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         // Retrieving the city name and the province name from the EditText fields
         final String event = eventText.getText().toString();
         HashMap<String, Object> data = new HashMap<>();
-
+        Intent i = getIntent();
+        String selectedTitle = i.getStringExtra("habit");
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
             data.put("latitude", latitude);
             data.put("longitude", longitude);
+            uploadImageToFirebase(selectedTitle,eventText.getText().toString(), dateText.getText().toString(), contentUri);
 
             if (dateText.getText().toString().equals(selectedEventDate)){
                 eventListReference
@@ -331,7 +410,94 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
+    //camera related
+    private void askCameraPermissions() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA}, CAMERA_PREM_CODE);
+        }else {
+            dispatchTakePictureIntent();
+        }
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PREM_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakePictureIntent();
+            } else {
+                Toast.makeText(this, "Camera Permission is Required to Use camera.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+event+date+".jpg");
+        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(selectedImage);
+                    }
+                });
+
+                Toast.makeText(ViewEditEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ViewEditEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+    /**
+     * save photo on the gallery
+     *
+     */
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+            }
+        }
+    }
     /**
      * This is the method for deleting data to the firestore
      */
@@ -380,6 +546,18 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                     e.printStackTrace();
                 }
             }
+        }else if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            File f = new File(currentPhotoPath);
+
+
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            contentUri = Uri.fromFile(f);
+            selectedImage.setImageURI(contentUri);
+            mediaScanIntent.setData(contentUri);
+            this.sendBroadcast(mediaScanIntent);
+        }else if(requestCode == GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            contentUri = data.getData();
+            selectedImage.setImageURI(contentUri);
         }
     }
 }
