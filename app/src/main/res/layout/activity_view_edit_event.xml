@@ -8,48 +8,49 @@
 
     <EditText
         android:id="@+id/event_editText_viewedit"
-        android:layout_width="230dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Event comment"
         android:gravity="center|left"
+        android:hint="Event comment"
         android:inputType="none"
         android:maxLength="20"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
 
     </EditText>
 
     <TextView
         android:id="@+id/event_date_viewedit"
-        android:layout_width="230dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="event  date"
         android:gravity="center|left"
+        android:hint="event  date"
         android:inputType="date"
         android:minHeight="48dp"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_editText_viewedit">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9">
 
     </TextView>
 
     <TextView
         android:id="@+id/address"
-        android:layout_width="286dp"
-        android:layout_height="45dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="44dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
+        android:gravity="center"
         android:minHeight="48dp"
         android:text="No Location Selected"
-        android:gravity="center"
         android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/change_location_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_date_viewedit"
         tools:ignore="MissingConstraints">
@@ -60,65 +61,58 @@
         android:id="@+id/change_location_button"
         android:layout_width="105dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginEnd="8dp"
         android:text="Choose"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/address"
-        app:layout_constraintTop_toBottomOf="@+id/event_date_viewedit" />
-
+        app:layout_constraintTop_toTopOf="@+id/address" />
 
 
     <Button
         android:id="@+id/confirm_button_viewedit"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="Confirm"
         app:layout_constraintBottom_toTopOf="@+id/delete_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/delete_button"
-        android:layout_width="130dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="Delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="20dp"
-        android:text="Event Comment:"
-        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:gravity="center|left"
-        app:layout_constraintBottom_toTopOf="@+id/textView9"
-        app:layout_constraintEnd_toStartOf="@+id/event_editText_viewedit"
-        app:layout_constraintHorizontal_bias="0.259"
+        android:text="Event Comment:"
+        android:textColor="@color/black"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.625" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="44dp"
-        android:text="Event Date:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:gravity="center|left"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/address"
-        app:layout_constraintEnd_toStartOf="@+id/event_date_viewedit"
-        app:layout_constraintHorizontal_bias="0.363"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Event Date:"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_editText_viewedit" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

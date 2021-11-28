@@ -8,9 +8,9 @@
 
     <com.github.sundeepk.compactcalendarview.CompactCalendarView
         android:id="@+id/simpleCalendarView"
-        android:layout_width="387dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="40dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:compactCalendarBackgroundColor="#FFF"
@@ -24,60 +24,50 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.471" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="340dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="96dp"
-        android:text="Black: Habit start date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
 
+        android:text="Black: Habit start date"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintBottom_toTopOf="@+id/textView11"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/simpleCalendarView"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView11"
-        android:layout_width="340dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="4dp"
-        android:text="Yellow: Have a plan in the future about this habit, "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Yellow: Plan in future"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintBottom_toTopOf="@+id/textView12"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10"
         tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="340dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-        android:text="Red: didn't follow the plan in the past date, "
+        android:layout_marginBottom="8dp"
+        android:text="Red: Past plan not followed"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView13"
-        android:layout_width="340dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="28dp"
-        android:text="Green: follow the schedule for this habit by inserting a habit event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="Green: Past plan followed"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

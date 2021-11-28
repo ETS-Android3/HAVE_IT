@@ -100,8 +100,7 @@ public class UserLoginActivity extends AppCompatActivity implements View.OnClick
      */
     private void userLogin() {
         String email = editTextEmail.getText().toString().trim();
-       String password = editTextPassword.getText().toString().trim();
-
+        String password = editTextPassword.getText().toString().trim();
 
 
         if(email.isEmpty()){

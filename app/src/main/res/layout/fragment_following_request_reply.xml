@@ -32,7 +32,7 @@
             <ListView
                 android:id="@+id/following_request_reply_list"
                 android:layout_width="match_parent"
-                android:layout_height="443dp" />
+                android:layout_height="match_parent" />
 
 
 
