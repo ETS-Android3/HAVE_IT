@@ -11,13 +11,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The activity for the following user's habit
+ * @author yulingshen
+ */
 public class FollowingHabitPageActivity extends AppCompatActivity {
 
+    /**
+     * A reference to all public habits' list view, of class {@link ListView}
+     */
     ListView followingHabitList;
+
+    /**
+     * The adapter to the list view, of class {@link HabitList}
+     */
     HabitList habitAdapter;
+
+    /**
+     * The list to store data for the habit adapter, of class {@link ArrayList}
+     */
     ArrayList<Habit> habitDataList;
 
-
+    /**
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

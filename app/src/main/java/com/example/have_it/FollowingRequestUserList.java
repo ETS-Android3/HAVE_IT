@@ -13,6 +13,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * The custom adapter for following requests
+ * @author yulingshen
+ */
 public class FollowingRequestUserList extends ArrayAdapter<GeneralUser> {
     /**
      *This is the array list for general user data, of class {@link ArrayList}
@@ -26,7 +30,7 @@ public class FollowingRequestUserList extends ArrayAdapter<GeneralUser> {
     /**
      *This is the constructor of {@link FollowingUserList}
      * @param context @see context, {@link Context}, give the context
-     * @param usersData @see habits, {@link ArrayList}, give the general user data
+     * @param usersData {@link ArrayList}, give the general user data
      */
     public FollowingRequestUserList(Context context, ArrayList<GeneralUser> usersData) {
         super(context, 0, usersData);

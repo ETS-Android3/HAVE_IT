@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+/**
+ * This is the activity for the account page (only function is logging out)
+ * @author yulingshen
+ */
 public class AccountPageActivity extends AppCompatActivity implements DatabaseUserReference {
 
     /**
@@ -28,12 +32,14 @@ public class AccountPageActivity extends AppCompatActivity implements DatabaseUs
     BottomNavigationView bottomNavigationView;
 
     /**
-     * Reference to the logut button of class {@link Button}
+     * Reference to the logout button of class {@link Button}
      */
-    Button logoutbutton;
+    Button logoutButton;
 
-
-
+    /**
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +48,7 @@ public class AccountPageActivity extends AppCompatActivity implements DatabaseUs
 
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.account_menu);
-        logoutbutton = (Button)findViewById(R.id.logout);
+        logoutButton = (Button)findViewById(R.id.logout);
 
         TextView textViewName = (TextView) findViewById(R.id.textviewname);
         DocumentReference docRef = db.collection("Users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -52,8 +58,7 @@ public class AccountPageActivity extends AppCompatActivity implements DatabaseUs
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document != null) {
-                        Log.i("LOGGER","Getname "+document.getString("Name"));
-
+                        Log.i("LOGGER","Get name "+document.getString("Name"));
                         textViewName.setText(document.getString("Name"));
                     } else {
                         Log.d("LOGGER", "No such name");
@@ -86,11 +91,11 @@ public class AccountPageActivity extends AppCompatActivity implements DatabaseUs
         });
         final Intent UserLoginActivity = new Intent(this, UserLoginActivity.class);
 
-        logoutbutton.setOnClickListener(new View.OnClickListener() {
+        logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                logged.setUID("");
                 startActivity(UserLoginActivity);
-
             }
         });
     }

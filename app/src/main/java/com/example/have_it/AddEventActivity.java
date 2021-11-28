@@ -87,11 +87,17 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     DatePickerDialog picker;
 
     /**
-     * Lagitude and Longitude to store the location as String Variable
+     * Latitude to store the location as String Variable, of class {@link String}
      */
     String latitude = null;
+    /**
+     * Longitude to store the location as String Variable, of class {@link String}
+     */
     String longitude = null;
 
+    /**
+     * Current context for use, of class {@link Context}
+     */
     Context context;
     public static final int CAMERA_PREM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE =102;
@@ -351,6 +357,12 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         }
     }
 
+    /**
+     * This is the method invoked when receiving result from another activity
+     * @param requestCode for super method
+     * @param resultCode for super method and checking if the data field is wanted
+     * @param data for super method and the data replied itself
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
