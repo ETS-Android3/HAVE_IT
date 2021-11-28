@@ -13,6 +13,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * The custom adapter for requested users
+ * @author yulingshen
+ */
 public class RequestedUserList extends ArrayAdapter<RequestedUser> {
     /**
      *This is the array list for user data, of class {@link ArrayList}
@@ -26,7 +30,7 @@ public class RequestedUserList extends ArrayAdapter<RequestedUser> {
     /**
      *This is the constructor of {@link FollowingUserList}
      * @param context @see context, {@link Context}, give the context
-     * @param UsersData @see habits, {@link ArrayList}, give the user data
+     * @param UsersData {@link ArrayList}, give the user data
      */
     public RequestedUserList(Context context, ArrayList<RequestedUser> UsersData) {
         super(context, 0, UsersData);
@@ -73,6 +77,10 @@ public class RequestedUserList extends ArrayAdapter<RequestedUser> {
         return view;
     }
 
+    /**
+     * Method invoked to get list of all UIDs of following users
+     * @return {@link ArrayList}, the list of UIDs
+     */
     public ArrayList<String> getUID(){
         ArrayList<String> result = new ArrayList<>();
         for (RequestedUser each : usersData){

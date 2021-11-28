@@ -14,8 +14,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
-
+/**
+ * The class for the following pages
+ * @author yulingshen
+ */
 public class FollowingPageActivity extends AppCompatActivity {
 
     /**
@@ -23,10 +25,20 @@ public class FollowingPageActivity extends AppCompatActivity {
      */
     BottomNavigationView bottomNavigationView;
 
+    /**
+     * Page adapter for the tab layout, of class {@link FollowingSectionsPageAdapter}
+     */
     private FollowingSectionsPageAdapter sectionsPageAdapter;
 
+    /**
+     * Reference to the container of tab layout, of class {@link ViewPager}
+     */
     private ViewPager viewPager;
 
+    /**
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +84,17 @@ public class FollowingPageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * The method for setting up the content of tab
+     * @param viewPager the container to set contents in, {@link ViewPager}
+     */
     private void setupViewPager(ViewPager viewPager){
-        FollowingSectionsPageAdapter adapter = new FollowingSectionsPageAdapter(getSupportFragmentManager());
-        adapter.addFragment(new NowFollowingFragment());
-        adapter.addFragment(new NewFollowingFragment());
-        adapter.addFragment(new FollowingRequestFragment());
-        adapter.addFragment(new FollowingRequestReplyFragment());
-        viewPager.setAdapter(adapter);
+        sectionsPageAdapter = new FollowingSectionsPageAdapter(getSupportFragmentManager());
+        sectionsPageAdapter.addFragment(new NowFollowingFragment());
+        sectionsPageAdapter.addFragment(new NewFollowingFragment());
+        sectionsPageAdapter.addFragment(new FollowingRequestFragment());
+        sectionsPageAdapter.addFragment(new FollowingRequestReplyFragment());
+        viewPager.setAdapter(sectionsPageAdapter);
     }
 
 

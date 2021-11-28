@@ -18,15 +18,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -69,11 +66,17 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     DatePickerDialog picker;
 
     /**
-     * Lagitude and Longitude to store the location as String Variable
+     * Latitude to store the location as String Variable, of class {@link String}
      */
     String latitude = null;
+    /**
+     * Longitude to store the location as String Variable, of class {@link String}
+     */
     String longitude = null;
 
+    /**
+     * Current context for use, of class {@link Context}
+     */
     Context context;
 
     /**
@@ -218,6 +221,12 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         }
     }
 
+    /**
+     * This is the method invoked when receiving result from another activity
+     * @param requestCode for super method
+     * @param resultCode for super method and checking if the data field is wanted
+     * @param data for super method and the data replied itself
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
