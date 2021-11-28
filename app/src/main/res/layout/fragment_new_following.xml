@@ -25,7 +25,13 @@
 
     </SearchView>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Before resending the following request, you need to confirm that user's reply" />
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
