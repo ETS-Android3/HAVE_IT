@@ -14,12 +14,35 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+/**
+ * Fragment for sending new following request
+ * @author yulingshen
+ */
 public class NewFollowingFragment extends Fragment {
+    /**
+     * A reference to all users list view, of class {@link ListView}
+     */
     ListView allUsersList;
+    /**
+     * Adapter for list view, of class {@link NewFollowUserList}
+     */
     NewFollowUserList usersAdapter;
+    /**
+     * The list to store data for the user adapter, of class {@link ArrayList}
+     */
     ArrayList<NewFollowUser> usersDataList;
+    /**
+     * A reference to search view for users, of class {@link SearchView}
+     */
     SearchView searchUserText;
 
+    /**
+     * Method invoked when creating the fragment
+     * @param inflater {@link LayoutInflater} used for setting layout
+     * @param container {@link ViewGroup} used for setting layout
+     * @param savedInstanceState {@link Bundle}
+     * @return {@link View} the view content
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

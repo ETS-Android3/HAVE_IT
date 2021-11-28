@@ -24,9 +24,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * This is the controller for all following page functions with use of firestore database
+ * @author yulingshen
+ */
 public class FollowingController implements DatabaseUserReference{
-
+    /**
+     * This is the method invoked to get the list of current following users
+     * @param nowFollowingAdapter the adapter used in the list view, {@link FollowingUserList}
+     * @param userDataList the data list itself of the adapter, {@link ArrayList}
+     */
     public static void getNowFollowing(FollowingUserList nowFollowingAdapter, ArrayList<GeneralUser> userDataList){
         final CollectionReference followingListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -46,6 +53,37 @@ public class FollowingController implements DatabaseUserReference{
         });
     }
 
+    /**
+     * This is the method invoked when de-following another user that is currently following
+     * @param generalUser the user to de-follow, {@link GeneralUser}
+     */
+    public static void defollowUser(GeneralUser generalUser){
+        final CollectionReference followingListReference = db.collection("Users")
+                .document(logged.getUID())
+                .collection("FollowingList");
+        followingListReference
+                .document(generalUser.getUID())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Delete following", "Done deleting");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Delete following", "Error deleting", e);
+                    }
+                });
+    }
+
+    /**
+     * This is the method invoked when viewing the following user's public habits
+     * @param UID the UID of the following user, {@link String}
+     * @param habitAdapter the adapter for the list view of habits, {@link HabitList}
+     * @param habitDataList the data list of habit adapter, {@link ArrayList}
+     */
     public static void setUserHabit(String UID, final HabitList habitAdapter, final ArrayList<Habit> habitDataList){
         final CollectionReference habitListReference = db.collection("Users")
                 .document(UID).collection("HabitList");
@@ -71,6 +109,13 @@ public class FollowingController implements DatabaseUserReference{
         });
     }
 
+    /**
+     * The method invoked when new following user fragment is being used
+     * @param usersAdapter the adapter of the list view of all users, {@link NewFollowUserList}
+     * @param usersDataList the data list of user adapter, {@link ArrayList}
+     * @param requestedAdapter the adapter that stores all requested users, {@link RequestedUserList}
+     * @param followingAdapter the adapter that stores all following users, {@link FollowingUserList}
+     */
     public static void getUserList(final NewFollowUserList usersAdapter, final ArrayList<NewFollowUser> usersDataList
             , RequestedUserList requestedAdapter, FollowingUserList followingAdapter){
         final CollectionReference usersReference = db.collection("Users");
@@ -95,6 +140,10 @@ public class FollowingController implements DatabaseUserReference{
         });
     }
 
+    /**
+     * The method invoked when sending a new request to the another user
+     * @param userSelection the user to follow, {@link NewFollowUser}
+     */
     public static void sendRequest(NewFollowUser userSelection){
         final CollectionReference requestedListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -184,6 +233,11 @@ public class FollowingController implements DatabaseUserReference{
         });
     }
 
+    /**
+     * The method invoked when getting all users that have already sent a request
+     * @param usersAdapter the adapter for the list view, {@link RequestedUserList}
+     * @param usersDataList the data list of the user adapter, {@link ArrayList}
+     */
     public static void getRequestedList(final RequestedUserList usersAdapter, final ArrayList<RequestedUser> usersDataList){
         final CollectionReference requestedListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -205,6 +259,11 @@ public class FollowingController implements DatabaseUserReference{
         });
     }
 
+    /**
+     * The method invoked when getting all pending following requests
+     * @param requestedUserAdapter the adapter for the list view, {@link FollowingRequestUserList}
+     * @param userDataList the data list of the user adapter, {@link ArrayList}
+     */
     public static void getFollowingRequest(FollowingRequestUserList requestedUserAdapter, ArrayList<GeneralUser> userDataList){
         final CollectionReference requestedListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -224,6 +283,10 @@ public class FollowingController implements DatabaseUserReference{
         });
     }
 
+    /**
+     * The method invoked when confirming another user's following request
+     * @param userSelection the user to confirm following request, {@link GeneralUser}
+     */
     public static void confirmFollowingRequest(GeneralUser userSelection){
         final DocumentReference usersReference = db.collection("Users").document(logged.getUID());
         usersReference
@@ -241,6 +304,10 @@ public class FollowingController implements DatabaseUserReference{
                 });
     }
 
+    /**
+     * The method invoked when rejecting another user's following request
+     * @param userSelection the user to reject following request, {@link GeneralUser}
+     */
     public static void rejectFollowingRequest(GeneralUser userSelection){
         final DocumentReference usersReference = db.collection("Users").document(logged.getUID());
         usersReference
@@ -258,6 +325,13 @@ public class FollowingController implements DatabaseUserReference{
                 });
     }
 
+    /**
+     * The method invoked by the confirming or rejecting user's following request
+     * This part of code is reused by both condition
+     * @param userSelection the user to confirm or reject following request, {@link GeneralUser}
+     * @param requestedData the data of the request, {@link HashMap}
+     * @param allowed whether the request is allowed, {@link boolean}
+     */
     private static void replyFollowingRequest(GeneralUser userSelection
             , HashMap<String, Object> requestedData, boolean allowed){
         final CollectionReference requestedListReference = db.collection("Users")
@@ -329,6 +403,11 @@ public class FollowingController implements DatabaseUserReference{
         }
     }
 
+    /**
+     * Method invoked when confirming the reply of following request
+     * Delete the reply on confirming
+     * @param userSelection the user's reply to confirm, {@link RequestedUser}
+     */
     public static void confirmReply(RequestedUser userSelection){
         final CollectionReference receivedRequestListReference = db.collection("Users")
                 .document(logged.getUID())
@@ -351,6 +430,10 @@ public class FollowingController implements DatabaseUserReference{
                 });
     }
 
+    /**
+     * Method invoked when setting badge for notification of pending following request and request reply
+     * @param tabLayout the tab layout to have badges on, {@link TabLayout}
+     */
     public static void setBadge(TabLayout tabLayout){
         final CollectionReference requestedListReference = db.collection("Users")
                 .document(logged.getUID())

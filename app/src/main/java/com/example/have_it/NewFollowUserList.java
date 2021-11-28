@@ -15,6 +15,10 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * The custom adapter for users to send new following request
+ * @author yulingshen
+ */
 public class NewFollowUserList extends ArrayAdapter<NewFollowUser> implements Filterable {
     /**
      *This is the array list for user data, of class {@link ArrayList}
@@ -32,7 +36,7 @@ public class NewFollowUserList extends ArrayAdapter<NewFollowUser> implements Fi
     /**
      *This is the constructor of {@link FollowingUserList}
      * @param context @see context, {@link Context}, give the context
-     * @param UsersData @see habits, {@link ArrayList}, give the user data
+     * @param UsersData {@link ArrayList}, give the user data
      */
     public NewFollowUserList(Context context, ArrayList<NewFollowUser> UsersData) {
         super(context, 0, UsersData);
@@ -87,16 +91,29 @@ public class NewFollowUserList extends ArrayAdapter<NewFollowUser> implements Fi
         return view;
     }
 
+    /**
+     * Method for getting count of the filtered number of data
+     * @return {@link int}, the number after filtering
+     */
     @Override
     public int getCount(){
         return usersDataFiltered.size();
     }
 
+    /**
+     * Method for getting an item at position
+     * @param position {@link int}, the position
+     * @return {@link NewFollowUser}, the user at that position
+     */
     @Override
     public NewFollowUser getItem(int position){
         return usersDataFiltered.get(position);
     }
 
+    /**
+     * The method used to create the filter with desired searching/filtering rule
+     * @return {@link Filter}, the filter created
+     */
     @Override
     public Filter getFilter() {
         Filter filter = new Filter(){

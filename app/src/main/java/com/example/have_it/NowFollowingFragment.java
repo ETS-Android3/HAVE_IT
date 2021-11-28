@@ -15,12 +15,31 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+/**
+ * Fragment for users now following
+ * @author yulingshen
+ */
 public class NowFollowingFragment extends Fragment implements DatabaseUserReference{
+    /**
+     * A reference to now following users list view, of class {@link ListView}
+     */
     ListView nowFollowingList;
+    /**
+     * Adapter for list view, of class {@link FollowingUserList}
+     */
     FollowingUserList nowFollowingAdapter;
+    /**
+     * The list to store data for the user adapter, of class {@link ArrayList}
+     */
     ArrayList<GeneralUser> userDataList;
 
-
+    /**
+     * Method invoked when creating the fragment
+     * @param inflater {@link LayoutInflater} used for setting layout
+     * @param container {@link ViewGroup} used for setting layout
+     * @param savedInstanceState {@link Bundle}
+     * @return {@link View} the view content
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
