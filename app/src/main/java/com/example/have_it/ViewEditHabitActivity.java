@@ -510,6 +510,13 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
         finish();
     }
 
+    /**
+     * This method is to update the image folder path on the firebase with new habit title
+     * @param habitTitle habit title
+     * @param imageName name of the image
+     * @param imageData data if the image
+     */
+
     private void uploadImageToFirebase(String habitTitle, String imageName, byte[] imageData) {
         final StorageReference imageReference = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+imageName);
         UploadTask uploadTask = imageReference.putBytes(imageData);

@@ -100,13 +100,28 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     String longitude = null;
 
     Context context;
+    /**
+     * camera and gallery action permit code, of class{@link int}
+     */
     public static final int CAMERA_PREM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
+    /**
+     * path for current photo store path, of class{@link String}
+     */
     String currentPhotoPath;
-    ImageView selectedImage;
-    ImageButton cameraBtn, galleryBtn;
+    /**
+     * current image content uri, of class{@link Uri}
+     */
     Uri contentUri;
+    /**
+     * image view of selected image, of class{@link ImageView}
+     */
+    ImageView selectedImage;
+    /**
+     * image button for camera and gallery, of class{@link ImageButton}
+     */
+    ImageButton cameraBtn, galleryBtn;
 
     /**
      *This is the method invoked when the activity starts
@@ -305,7 +320,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                uploadImageToFirebase(selectedHabit,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                uploadImageToFirebase(selectedHabit, dateText.getText().toString(), contentUri);
                                 Log.d("Edit Habit", "Habit data has been edited successfully!");
                                 finish();
                             }
@@ -329,7 +344,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                     if (document.exists()) {
                                         Toast.makeText(getApplicationContext(), "cannot edit event: another event at the same day", Toast.LENGTH_LONG).show();
                                     } else {
-                                        uploadImageToFirebase(selectedHabit,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                        uploadImageToFirebase(selectedHabit, dateText.getText().toString(), contentUri);
                                         StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedHabit+"/"+selectedEventDate+".jpg");
                                         // Delete the file
                                         eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -386,7 +401,10 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
-    //camera related
+
+    /**
+     * This method is ask the permission of use intent camera from user
+     */
     private void askCameraPermissions() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA}, CAMERA_PREM_CODE);
@@ -396,6 +414,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
 
     }
 
+    /**
+     * Check whether the camera permission has been proved
+     * @param requestCode camera request code.
+     * @param permissions permissions.
+     * @param grantResults grant request result.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -407,7 +431,13 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
-    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
+    /**
+     * Upload the image to firebase
+     * @param habitTitle the title of the habit
+     * @param date the date of event
+     * @param contentUri uri of upload image
+     */
+    private void uploadImageToFirebase( String habitTitle, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         if (!contentUri.equals(Uri.EMPTY)){
             image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -431,8 +461,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         }
     }
     /**
-     * save photo on the gallery
-     *
+     * Create the image file to store the images
+     * @return File image
+     * @throws IOException
      */
 
     private File createImageFile() throws IOException {
@@ -451,7 +482,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
+    /**
+     * This method is to create image file for taken picture use intent camera
+     */
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -516,6 +549,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 });
     }
 
+    /**
+     * This is the method invoked when receiving result from another activity
+     * @param requestCode for super method
+     * @param resultCode for super method and checking if the data field is wanted
+     * @param data for super method and the data replied itself
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

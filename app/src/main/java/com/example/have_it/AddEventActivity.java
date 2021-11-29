@@ -99,12 +99,27 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      * Current context for use, of class {@link Context}
      */
     Context context;
+    /**
+     * camera and gallery action permit code, of class{@link int}
+     */
     public static final int CAMERA_PREM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
+    /**
+     * path for current photo store path, of class{@link String}
+     */
     String currentPhotoPath;
+    /**
+     * current image content uri, of class{@link Uri}
+     */
     Uri contentUri;
+    /**
+     * image view of selected image, of class{@link ImageView}
+     */
     ImageView selectedImage;
+    /**
+     * image button for camera and gallery, of class{@link ImageButton}
+     */
     ImageButton cameraBtn, galleryBtn;
 
     /**
@@ -187,6 +202,10 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         });
     }
+
+    /**
+     * Ask the permission of use phone camera from user
+     */
     private void askCameraPermissions() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA}, CAMERA_PREM_CODE);
@@ -195,6 +214,13 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         }
 
     }
+
+    /**
+     * Check whether the camera permission has been proved
+     * @param requestCode camera request code.
+     * @param permissions permissions.
+     * @param grantResults grant request result.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -206,7 +232,14 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         }
     }
-    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
+
+    /**
+     * Upload the image to firebase
+     * @param habitTitle the title of the habit
+     * @param date the date of event
+     * @param contentUri uri of upload image
+     */
+    private void uploadImageToFirebase( String habitTitle, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -228,15 +261,10 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         });
     }
 
-    private String getFileExt(Uri contentUri){
-        ContentResolver c = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
-
     /**
-     * save photo on the gallery
-     *
+     * Create the image file to store the images
+     * @return File image
+     * @throws IOException
      */
 
     private File createImageFile() throws IOException {
@@ -256,6 +284,9 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         return image;
     }
 
+    /**
+     * This method is to create image file for taken picture use intent camera
+     */
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -336,7 +367,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                                         public void onSuccess(Void aVoid) {
                                             // These are a method which gets executed when the task is succeeded
                                             Log.d("Adding event", "event data has been added successfully!");
-                                            uploadImageToFirebase(selectedTitle,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                            uploadImageToFirebase(selectedTitle, dateText.getText().toString(), contentUri);
                                             finish();
                                         }
                                     })
