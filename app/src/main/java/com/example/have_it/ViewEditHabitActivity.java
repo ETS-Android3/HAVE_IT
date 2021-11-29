@@ -537,8 +537,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
             public void onFailure(@NonNull Exception exception) {
             }
         });
-
-
     }
 
 }

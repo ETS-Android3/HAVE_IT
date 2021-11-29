@@ -208,8 +208,6 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         });
 
-
-
         Intent intent = new Intent(ViewEditEventActivity.this.getApplicationContext(), ChangeLocationMapsActivity.class);
         changeLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,10 +217,6 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 startActivityForResult(intent, 2404);
             }
         });
-
-
-
-
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,8 +277,6 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        String word = eventText.getText().toString()+".jpg";
-                        Toast.makeText(ViewEditEventActivity.this, word, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -336,7 +328,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                uploadImageToFirebase(selectedHabit,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                uploadImageToFirebase(selectedHabit, dateText.getText().toString(), contentUri);
                                 Log.d("Edit Habit", "Habit data has been edited successfully!");
                                 finish();
                             }
@@ -360,7 +352,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                     if (document.exists()) {
                                         Toast.makeText(getApplicationContext(), "cannot edit event: another event at the same day", Toast.LENGTH_LONG).show();
                                     } else {
-                                        uploadImageToFirebase(selectedHabit,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                        uploadImageToFirebase(selectedHabit, dateText.getText().toString(), contentUri);
                                         StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedHabit+"/"+selectedEventDate+".jpg");
                                         // Delete the file
                                         eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -451,11 +443,10 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     /**
      * Upload the image to firebase
      * @param habitTitle the title of the habit
-     * @param event the title of the event
      * @param date the date of event
      * @param contentUri uri of upload image
      */
-    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
+    private void uploadImageToFirebase( String habitTitle, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         if (!contentUri.equals(Uri.EMPTY)){
             image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -484,6 +475,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
      * @return File image
      * @throws IOException
      */
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());

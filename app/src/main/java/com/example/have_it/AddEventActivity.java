@@ -246,11 +246,10 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     /**
      * Upload the image to firebase
      * @param habitTitle the title of the habit
-     * @param event title of the event
      * @param date the date of event
      * @param contentUri uri of upload image
      */
-    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
+    private void uploadImageToFirebase( String habitTitle, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         if (!contentUri.equals(Uri.EMPTY)){
             image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -379,7 +378,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                                         public void onSuccess(Void aVoid) {
                                             // These are a method which gets executed when the task is succeeded
                                             Log.d("Adding event", "event data has been added successfully!");
-                                            uploadImageToFirebase(selectedTitle,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                            uploadImageToFirebase(selectedTitle, dateText.getText().toString(), contentUri);
                                             finish();
                                         }
                                     })
