@@ -70,6 +70,9 @@ public class AddHabitActivity extends AppCompatActivity implements FirestoreAddD
      */
     Switch publicitySwitch;
 
+    /**
+     * count used to receive the total number of habits from habit page activity, of class {@link Integer}
+     */
     int count;
 
     /**

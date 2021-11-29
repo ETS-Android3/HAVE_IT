@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,25 +29,66 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.LocationListener;
 
-
+/**
+ *This is the activity for editing your selected address for your selected habit event
+ * extends {@link FragmentActivity} implements {@link OnMapReadyCallback}, {@link GoogleApiClient.ConnectionCallbacks}, {@link GoogleApiClient.OnConnectionFailedListener}, {@link LocationListener}
+ * @author ruiqingtian
+ */
 public class ChangeLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    /**
+     *This is the current context, of class {@link Context}
+     */
     Context context;
+
+    /**
+     *This is map fragment used in this map activity, of class {@link SupportMapFragment}
+     */
     SupportMapFragment mapFragment;
+
+    /**
+     *Reference to the add button, of class {@link Button}
+     */
     Button addButton;
 
+    /**
+     *Reference to the google map, of class {@link GoogleMap}
+     */
     GoogleMap mMap;
+
+    /**
+     *Reference to the google map client, of class {@link GoogleApiClient}
+     */
     GoogleApiClient mGoogleApiClient;
+
+    /**
+     *Reference to the last location on the map, of class {@link Location}
+     */
     Location mLastLocation;
+
+    /**
+     *Reference to the marker on the map, of class {@link Marker}
+     */
     Marker mCurrLocationMarker;
+
+    /**
+     *Reference to the request for location, of class {@link LocationRequest}
+     */
     LocationRequest mLocationRequest;
 
     /**
-     * Lagitude and Longitude to store the location as String Variable
+     * Lagitude to store the location as String Variable {@link String}
      */
     String latitude = null;
+    /**
+     * Longitude to store the location as String Variable {@link String}
+     */
     String longitude = null;
 
+    /**
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +109,10 @@ public class ChangeLocationMapsActivity extends FragmentActivity implements OnMa
     }
 
 
+    /**
+     *This is the method invoked when google map is ready to set up
+     * @param googleMap {@link GoogleMap}
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -135,6 +181,10 @@ public class ChangeLocationMapsActivity extends FragmentActivity implements OnMa
         }
     }
 
+    /**
+     *This is the method invoked when google api client is required to be built and
+     * @return
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -144,6 +194,10 @@ public class ChangeLocationMapsActivity extends FragmentActivity implements OnMa
         mGoogleApiClient.connect();
     }
 
+    /**
+     *This is the method invoked when a location request is needed for this activity
+     * @return
+     */
     @Override
     public void onConnected(Bundle bundle) {
 
@@ -162,6 +216,10 @@ public class ChangeLocationMapsActivity extends FragmentActivity implements OnMa
     @Override
     public void onConnectionSuspended(int i) {}
 
+    /**
+     *This is the method invoked when the location on google map is changed
+     * @return
+     */
     @Override
     public void onLocationChanged(Location location) {
 
@@ -190,9 +248,7 @@ public class ChangeLocationMapsActivity extends FragmentActivity implements OnMa
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
-
 
 
 }
