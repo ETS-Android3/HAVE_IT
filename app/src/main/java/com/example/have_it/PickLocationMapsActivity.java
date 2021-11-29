@@ -48,9 +48,7 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-    /**
-     * Lagitude and Longitude to store the location as String Variable
-     */
+    
     String latitude = null;
     String longitude = null;
 
