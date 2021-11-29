@@ -93,8 +93,17 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
      */
     String selectedTitle;
 
+    /**
+     * count used to get the specific position of this habit located in the list (for recordering), of class {@link Integer}
+     */
     Integer count;
+
+    /**
+     *This is the current context, of class {@link Context}
+     */
     Context context;
+
+
     final long ONE_MEGABYTE = 1024 * 1024;
 
 
@@ -509,13 +518,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
 
         finish();
     }
-
-    /**
-     * This method is to update the image folder path on the firebase with new habit title
-     * @param habitTitle habit title
-     * @param imageName name of the image
-     * @param imageData data if the image
-     */
 
     private void uploadImageToFirebase(String habitTitle, String imageName, byte[] imageData) {
         final StorageReference imageReference = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+imageName);

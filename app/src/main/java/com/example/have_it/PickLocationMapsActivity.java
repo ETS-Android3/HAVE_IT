@@ -35,23 +35,67 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ *This is the activity for adding an address for your selected habit event
+ * extends {@link FragmentActivity} implements {@link OnMapReadyCallback}, {@link GoogleApiClient.ConnectionCallbacks}, {@link GoogleApiClient.OnConnectionFailedListener}, {@link LocationListener}
+ * @author ruiqingtian
+ */
 public class PickLocationMapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    /**
+     *This is the current context, of class {@link Context}
+     */
     Context context;
+
+    /**
+     *This is map fragment used in this map activity, of class {@link SupportMapFragment}
+     */
     SupportMapFragment mapFragment;
+
+    /**
+     *Reference to the add button, of class {@link Button}
+     */
     Button addButton;
 
+    /**
+     *Reference to the google map, of class {@link GoogleMap}
+     */
     GoogleMap mMap;
+
+    /**
+     *Reference to the google map client, of class {@link GoogleApiClient}
+     */
     GoogleApiClient mGoogleApiClient;
+
+    /**
+     *Reference to the last location on the map, of class {@link Location}
+     */
     Location mLastLocation;
+
+    /**
+     *Reference to the marker on the map, of class {@link Marker}
+     */
     Marker mCurrLocationMarker;
+
+    /**
+     *Reference to the request for location, of class {@link LocationRequest}
+     */
     LocationRequest mLocationRequest;
 
-    
+    /**
+     * Lagitude to store the location as String Variable {@link String}
+     */
     String latitude = null;
+    /**
+     * Longitude to store the location as String Variable {@link String}
+     */
     String longitude = null;
 
+
+    /**
+     *This is the method invoked when the activity starts
+     * @param savedInstanceState {@link Bundle} used for its super class
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +112,10 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
     }
 
 
+    /**
+     *This is the method invoked when google map is ready to set up
+     * @param googleMap {@link GoogleMap}
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -124,6 +172,10 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
         }
     }
 
+    /**
+     *This is the method invoked when google api client is required to be built and
+     * @return
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -133,6 +185,10 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
         mGoogleApiClient.connect();
     }
 
+    /**
+     *This is the method invoked when a location request is needed for this activity
+     * @return
+     */
     @Override
     public void onConnected(Bundle bundle) {
 
@@ -151,6 +207,10 @@ public class PickLocationMapsActivity extends FragmentActivity implements OnMapR
     @Override
     public void onConnectionSuspended(int i) {}
 
+    /**
+     *This is the method invoked when the location on google map is changed
+     * @return
+     */
     @Override
     public void onLocationChanged(Location location) {
 

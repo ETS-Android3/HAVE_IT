@@ -179,6 +179,10 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
         });
     }
 
+    /**
+     *This is the method invoked when the card is dragged in the activity
+     * @return
+     */
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -198,6 +202,10 @@ public class HabitPageActivity extends AppCompatActivity implements  FirestoreGe
     };
 
 
+    /**
+     *This is the method invoked the order of those habits are needed to be updated due to dragging og these habits in the activity
+     * @return
+     */
     public void upLoad() {
 
         final CollectionReference habitListReference = db.collection("Users")
