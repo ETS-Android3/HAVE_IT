@@ -92,7 +92,6 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
      * The habit title selected, of class {@link String}
      */
     String selectedHabit;
-
     /**
      * Lagitude to store the location as String Variable {@link String}
      */
@@ -101,19 +100,41 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
      * Longitude to store the location as String Variable {@link String}
      */
     String longitude = null;
-
     /**
      *This is the current context, of class {@link Context}
      */
     Context context;
-
-
+    /**
+     * camera permit code, of class{@link int}
+     */
     public static final int CAMERA_PREM_CODE = 101;
+    /**
+     * camera request code, of class{@link int}
+     */
     public static final int CAMERA_REQUEST_CODE =102;
+    /**
+     * gallery request code, of class{@link int}
+     */
     public static final int GALLERY_REQUEST_CODE=105;
+    /**
+     * path for current photo store path, of class{@link String}
+     */
     String currentPhotoPath;
+    /**
+     * current image content uri, of class{@link Uri}
+     */
     ImageView selectedImage;
-    ImageButton cameraBtn, galleryBtn;
+    /**
+     * image view of camera button, of class{@link ImageView}
+     */
+    ImageButton cameraBtn;
+    /**
+     * image view of gallery button, of class{@link ImageView}
+     */
+    ImageButton galleryBtn;
+    /**
+     * current image content uri, of class{@link Uri}
+     */
     Uri contentUri;
 
     /**
@@ -394,7 +415,10 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
-    //camera related
+
+    /**
+     * Ask the permission of use phone camera from user
+     */
     private void askCameraPermissions() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA}, CAMERA_PREM_CODE);
@@ -404,6 +428,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
 
     }
 
+    /**
+     * Check whether the camera permission has been proved
+     * @param requestCode camera request code.
+     * @param permissions permissions.
+     * @param grantResults grant request result.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -415,6 +445,13 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
+
+    /**
+     * Upload the image to firebase
+     * @param habitTitle the title of the habit
+     * @param date the date of event
+     * @param contentUri uri of upload image
+     */
     private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         if (!contentUri.equals(Uri.EMPTY)){
@@ -438,11 +475,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             });
         }
     }
-    /**
-     * save photo on the gallery
-     *
-     */
 
+    /**
+     * Create the image file to store the images
+     * @return File image
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -460,7 +498,9 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         return image;
     }
 
-
+    /**
+     * This method is to create image file for taken picture use intent camera
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -483,6 +523,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
+
     /**
      * This is the method for deleting data to the firestore
      */

@@ -57,7 +57,7 @@ import java.util.Locale;
 
 /**
  *This is the activity for adding a new event
- * @author songkunguo & ruiqingtian
+ * @author songkunguo & ruiqingtian & jianbangchen
  */
 public class AddEventActivity extends AppCompatActivity implements FirestoreAddData, DatabaseUserReference{
 
@@ -85,7 +85,6 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      *Reference to the dialog for picking date, of class {@link DatePickerDialog}
      */
     DatePickerDialog picker;
-
     /**
      * Latitude to store the location as String Variable, of class {@link String}
      */
@@ -94,19 +93,42 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
      * Longitude to store the location as String Variable, of class {@link String}
      */
     String longitude = null;
-
     /**
      * Current context for use, of class {@link Context}
      */
     Context context;
-
+    /**
+     * camera permit code, of class{@link int}
+     */
     public static final int CAMERA_PREM_CODE = 101;
+    /**
+     * camera request code, of class{@link int}
+     */
     public static final int CAMERA_REQUEST_CODE =102;
+    /**
+     * gallery request code, of class{@link int}
+     */
     public static final int GALLERY_REQUEST_CODE=105;
+    /**
+     * path for current photo store path, of class{@link String}
+     */
     String currentPhotoPath;
-    Uri contentUri;
+    /**
+     * current image content uri, of class{@link Uri}
+     */
     ImageView selectedImage;
-    ImageButton cameraBtn, galleryBtn;
+    /**
+     * image view of camera button, of class{@link ImageView}
+     */
+    ImageButton cameraBtn;
+    /**
+     * image view of gallery button, of class{@link ImageView}
+     */
+    ImageButton galleryBtn;
+    /**
+     * current image content uri, of class{@link Uri}
+     */
+    Uri contentUri;
 
     /**
      *This is the method invoked when the activity starts
@@ -188,6 +210,10 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         });
     }
+
+    /**
+     * Ask the permission of use phone camera from user
+     */
     private void askCameraPermissions() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.CAMERA}, CAMERA_PREM_CODE);
@@ -196,6 +222,13 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         }
 
     }
+
+    /**
+     * Check whether the camera permission has been proved
+     * @param requestCode camera request code.
+     * @param permissions permissions.
+     * @param grantResults grant request result.
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -207,6 +240,13 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         }
     }
+
+    /**
+     * Upload the image to firebase
+     * @param habitTitle the title of the habit
+     * @param date the date of event
+     * @param contentUri uri of upload image
+     */
     private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -229,17 +269,13 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         });
     }
 
-    private String getFileExt(Uri contentUri){
-        ContentResolver c = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
-
     /**
      * save photo on the gallery
      *
+     * Create the image file to store the images
+     * @return File image
+     * @throws IOException
      */
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -257,7 +293,9 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         return image;
     }
 
-
+    /**
+     * This method is to create image file for taken picture use intent camera
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -280,6 +318,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         }
     }
+
     /**
      *This is the method invoked when the back in menu is pressed
      * @param item used for its super class
