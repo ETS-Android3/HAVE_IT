@@ -13,18 +13,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class HaveItUnitTest {
-    Event testEvent;
+public class HabitUnitTest {
     private HabitList tempHabList;
     Habit testHabit;
-    // this is just a pointer for our Eventlist, we will use it shortly
-    public EventList tmpEventList;
-    public User testUser;
 
     // mockHablist and mockHabit creates a resuable HabitList
     private ArrayList<Boolean> weekday = new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false));
     private Habit mockHabit(){
-        return new Habit("brush teeth", "because I want to", Calendar.getInstance().getTime(), weekday);
+        return new Habit("brush teeth", "because I want to", Calendar.getInstance().getTime(), weekday, true);
     }
 
     private HabitList mockHabList(){
@@ -32,42 +28,10 @@ public class HaveItUnitTest {
         return habitList;
     }
 
-    // mockEvent and mock EventList creates a reusable EventList
-    private Event mockEvent(){
-        return new Event("brushing teeth", "2021-11-11");
-    }
-
-    private EventList mockEventList(){
-        EventList eventList = new EventList(null, new ArrayList<Event>(Arrays.asList(mockEvent())));
-        return eventList;
-    }
-
-    @Test
-    public void TestEventInitialization(){
-         testEvent = new Event("sleep fast", "2021-5-5");
-        assertEquals("sleep fast", testEvent.getEvent());
-        assertEquals("2021-5-5", testEvent.getDate());
-    }
-
-    @Test
-    public void TestsetEvent(){
-        testEvent = new Event("sleep fast", "2021-5-5");
-        testEvent.setEvent("stay awake");
-        testEvent.setDate("2021-5-6");
-        assertEquals("stay awake", testEvent.getEvent());
-        assertEquals("2021-5-6", testEvent.getDate());
-    }
-
-    @Test
-    void TestEventListInitialize(){
-        tmpEventList = mockEventList();
-        assertNotNull(tmpEventList);
-    }
-
     @Test
     public void TestHabitInitialization(){
         testHabit = new Habit("play League", "I don't want to sleep",
-                Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false)));
+                Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false)), true);
         assertEquals("play League", testHabit.getTitle());
         assertEquals("I don't want to sleep", testHabit.getReason());
         assertEquals(Calendar.getInstance().getTime().toString(), testHabit.getDateStart().toString());
@@ -77,7 +41,7 @@ public class HaveItUnitTest {
     @Test
     public void TestsetHabit(){
         testHabit = new Habit("play League", "I don't want to sleep",
-                Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false)));
+                Calendar.getInstance().getTime(), new ArrayList<>(Arrays.asList(false, false, false, false, false, false, false)), true);
         testHabit.setTitle("stay awake");
         testHabit.setReason("I don't want to play league");
         testHabit.setWeekdayReg(new ArrayList<>(Arrays.asList(false)));
@@ -106,14 +70,4 @@ public class HaveItUnitTest {
         // the habit is not today, so today there should be no habit
         assertEquals(0,tempHabList.getTodayHabits().size());
     }
-
-    @Test
-    public void TestUser(){
-        testUser = User.getInstance();
-        testUser.setUID("123321");
-        assertEquals("123321", testUser.getUID());
-    }
-
-
-
 }
