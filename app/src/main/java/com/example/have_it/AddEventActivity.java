@@ -202,8 +202,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         }
     }
-    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
-        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+event+date+".jpg");
+    private void uploadImageToFirebase( String habitTitle, String date, Uri contentUri) {
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -224,11 +224,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         });
 
     }
-    private String getFileExt(Uri contentUri){
-        ContentResolver c = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(c.getType(contentUri));
-    }
+
 
     /**
      * save photo on the gallery
@@ -332,7 +328,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                                         public void onSuccess(Void aVoid) {
                                             // These are a method which gets executed when the task is succeeded
                                             Log.d("Adding event", "event data has been added successfully!");
-                                            uploadImageToFirebase(selectedTitle,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                            uploadImageToFirebase(selectedTitle, dateText.getText().toString(), contentUri);
                                             finish();
                                         }
                                     })

@@ -3,18 +3,23 @@ package com.example.have_it;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,11 +29,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +43,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -107,7 +115,8 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     String currentPhotoPath;
     ImageView selectedImage;
     ImageButton cameraBtn, galleryBtn;
-    Uri contentUri;
+    Uri contentUri,newuri;
+    File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
     /**
      *This is the method invoked when the activity starts
@@ -207,7 +216,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                 Intent i = getIntent();
                                 String selectedTitle = i.getStringExtra("habit");
                                 // Create a reference to the file to delete
-                                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+eventText.getText().toString()+dateText.getText().toString()+".jpg");
+                                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+dateText.getText().toString()+".jpg");
 
                                 // Delete the file
                                 eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -280,11 +289,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 longitude = (String) documentSnapshot.getData().get("longitude");
                 Intent i = getIntent();
                 String selectedTitle = i.getStringExtra("habit");
-                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+eventText.getText().toString()+dateText.getText().toString()+".jpg");
+                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+dateText.getText().toString()+".jpg");
                 eventImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).into(selectedImage);
+                        newuri = uri;
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -329,14 +339,12 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         // Retrieving the city name and the province name from the EditText fields
         final String event = eventText.getText().toString();
         HashMap<String, Object> data = new HashMap<>();
-        Intent i = getIntent();
-        String selectedTitle = i.getStringExtra("habit");
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
             data.put("latitude", latitude);
             data.put("longitude", longitude);
-            uploadImageToFirebase(selectedTitle,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+
 
             if (dateText.getText().toString().equals(selectedEventDate)){
                 eventListReference
@@ -345,6 +353,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                uploadImageToFirebase(selectedHabit, dateText.getText().toString(), contentUri);
                                 Log.d("Edit Habit", "Habit data has been deleted successfully!");
                                 finish();
                             }
@@ -374,6 +383,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
+
                                                         Log.d("Delete event", "event data has been deleted successfully!");
 
                                                     }
@@ -390,7 +400,13 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
-                                                        // These are a method which gets executed when the task is succeeded
+                                                        /**
+                                                        try {
+                                                            updateImageToFirebase(selectedHabit,dateText.getText().toString());
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }*/
+                                                        Toast.makeText(ViewEditEventActivity.this, "event data has been edited successfully.", Toast.LENGTH_SHORT).show();
                                                         Log.d("Adding event", "event data has been edited successfully!");
                                                         finish();
                                                     }
@@ -431,8 +447,8 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         }
     }
-    private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
-        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+event+date+".jpg");
+    private void uploadImageToFirebase( String habitTitle, String date, Uri contentUri) {
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -440,6 +456,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).into(selectedImage);
+                        newuri = uri;
                     }
                 });
 
@@ -453,6 +470,48 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         });
 
     }
+    private void updateImageToFirebase( String habitTitle, String date) throws IOException {
+        //download image locally
+        final StorageReference refn = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+selectedEventDate+".jpg");
+        final File localFile = File.createTempFile("temp", "jpg",storageDir);
+        refn.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.R)
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                Toast.makeText(ViewEditEventActivity.this, "download locally  successfully", Toast.LENGTH_SHORT).show(); }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ViewEditEventActivity.this, "Error: download locally", Toast.LENGTH_SHORT).show();
+                }
+            });
+        Uri file = Uri.fromFile(new File(localFile.getAbsolutePath()));
+        final StorageReference uploadref = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+dateText.getText().toString()+".jpg");
+        UploadTask uploadTask = uploadref.putFile(file);
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Toast.makeText(ViewEditEventActivity.this, "upload image successfully", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+                Toast.makeText(ViewEditEventActivity.this, "upload image error", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+    private String getFileExt(Uri newuri){
+        ContentResolver c = getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(c.getType(newuri));
+    }
     /**
      * save photo on the gallery
      *
@@ -463,7 +522,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
