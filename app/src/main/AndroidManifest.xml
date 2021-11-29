@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.have_it">
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--    ACCESS_COARSE_LOCATION is used -->
+    <!--    when we use network location provider for our Android app-->
+
+    <!--    ACCESS_FINE_LOCATION is providing permission for both providers-->
+
+    <!--    INTERNET permission is must for the use of network provider.-->
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Have_It">
+        <!--        <activity-->
+        <!--            android:name=".AddEvent"-->
+        <!--            android:parentActivityName=".EventPageActivity">-->
+
+        <!--        &lt;!&ndash; The meta-data tag is required if you support API level 15 and lower &ndash;&gt;-->
+        <!--        <meta-data-->
+        <!--            android:name="android.support.PARENT_ACTIVITY"-->
+        <!--            android:value=".EventPageActivity" />-->
+        <!--        </activity>-->
+
+<!--        Use Google Cloud Platform to generate a API key to use google map-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCXIGOQHN7oakK-C3W_cU-khcyqVTmoy10" />
+
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="true"
+            android:parentActivityName=".UserLoginActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UserLoginActivity" />
+        </activity>
+        <activity
+            android:name=".UserRegisterActivity"
+            android:exported="true"
+            android:parentActivityName=".UserLoginActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".UserLoginActivity" />
+        </activity>
+        <activity
+            android:name=".UserLoginActivity"
+            android:exported="true" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+        <activity
+            android:name=".HabitPageActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".AddHabitActivity"
+            android:parentActivityName=".HabitPageActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HabitPageActivity" />
+        </activity>
+        <activity
+            android:name=".ViewEditHabitActivity"
+            android:parentActivityName=".HabitPageActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HabitPageActivity" />
+        </activity>
+
+        <activity
+            android:name=".EventPageActivity"
+            android:parentActivityName=".ViewEditHabitActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ViewEditHabitActivity" />
+        </activity>
+        <activity
+            android:name=".AddEventActivity"
+            android:parentActivityName=".EventPageActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EventPageActivity" />
+        </activity>
+        <activity
+            android:name=".ViewEditEventActivity"
+            android:parentActivityName=".EventPageActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".EventPageActivity" />
+        </activity>
+
+        <activity
+            android:name=".PickLocationMapsActivity"
+            android:parentActivityName=".AddEventActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".ChangeLocationMapsActivity"
+            android:parentActivityName=".ViewEditEventActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".IndicatorActivity"
+            android:exported="true"
+            android:parentActivityName=".ViewEditHabitActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ViewEditHabitActivity" />
+        </activity>
+        <activity
+            android:name=".FollowingPageActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".FollowingHabitPageActivity"
+            android:exported="true"
+            android:parentActivityName=".FollowingPageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FollowingPageActivity" />
+        </activity>
+        <activity
+            android:name=".FollowingIndicatorActivity"
+            android:exported="true"
+            android:parentActivityName=".FollowingHabitPageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FollowingHabitPageActivity" />
+        </activity>
+        <activity
+            android:name=".AccountPageActivity"
+            android:exported="true">
+        </activity>
+    </application>
+
+</manifest>
