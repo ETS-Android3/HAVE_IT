@@ -117,7 +117,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
         context = this.getApplicationContext();
-
+        contentUri = Uri.EMPTY;
         eventText = findViewById(R.id.event_editText);
         dateText = findViewById(R.id.date);
         addressText = findViewById(R.id.address);
@@ -207,26 +207,29 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
             }
         }
     }
+
     private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
         final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(selectedImage);
-                    }
-                });
+        if (!contentUri.equals(Uri.EMPTY)){
+            image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.get().load(uri).into(selectedImage);
+                        }
+                    });
 
-                Toast.makeText(AddEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(AddEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    Toast.makeText(AddEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(AddEventActivity.this, "Upload Failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private String getFileExt(Uri contentUri){
