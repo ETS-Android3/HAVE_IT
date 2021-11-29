@@ -85,7 +85,6 @@
         android:text="Delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -116,18 +115,13 @@
 
     <ImageView
         android:id="@+id/displayImageView"
-        android:layout_width="150dp"
+        android:layout_width="0dp"
         android:layout_height="150dp"
-        android:layout_marginStart="147dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="156dp"
-        android:layout_marginBottom="167dp"
-        app:layout_constraintBottom_toTopOf="@+id/confirm_button_viewedit"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.404"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/address"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/change_location_button"
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <ImageButton
@@ -135,14 +129,11 @@
         android:layout_width="50dp"
         android:layout_height="46dp"
         android:layout_marginStart="90dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="60dp"
-        android:layout_marginBottom="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/confirm_button_viewedit"
         app:layout_constraintEnd_toStartOf="@+id/galleryBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_date_viewedit"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/displayImageView"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
     <ImageButton
@@ -150,14 +141,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="122dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="99dp"
-        android:layout_marginBottom="70dp"
-        app:layout_constraintBottom_toTopOf="@+id/confirm_button_viewedit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cameraBtn"
-        app:layout_constraintTop_toBottomOf="@+id/event_date_viewedit"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/displayImageView"
         app:srcCompat="@android:drawable/ic_menu_gallery" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

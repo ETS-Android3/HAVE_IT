@@ -3,6 +3,7 @@ package com.example.have_it;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,6 +32,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 
 import java.text.ParseException;
@@ -90,6 +95,8 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
 
     Integer count;
     Context context;
+    final long ONE_MEGABYTE = 1024 * 1024;
+
 
 
     /**
@@ -255,7 +262,6 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                             }
                         });
             } else {
-
                 habitListReference
                         .document(title)
                         .get()
@@ -267,6 +273,43 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
                                     if (document.exists()) {
                                         Toast.makeText(getApplicationContext(), "cannot edit because the habit with same title exists", Toast.LENGTH_LONG).show();
                                     } else {
+                                        StorageReference imageFolderReference = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle);
+                                        imageFolderReference.listAll()
+                                                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                                                    @Override
+                                                    public void onSuccess(ListResult listResult) {
+                                                        for (StorageReference item : listResult.getItems()) {
+                                                            item.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                                @Override
+                                                                public void onSuccess(byte[] bytes) {
+                                                                    String imageName = item.getName();
+                                                                    uploadImageToFirebase(title,imageName,bytes);
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception exception) {
+                                                                }
+                                                            });
+                                                            item.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Log.d("Delete photo", "Photo deleted successfully");
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w("Delete photo", "Error deleting photo", e);
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                    }
+                                                });
+
                                         habitListReference
                                                 .document(title)
                                                 .set(data)
@@ -406,6 +449,7 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
         final CollectionReference eventListReference = db.collection("Users")
                 .document(logged.getUID()).collection("HabitList")
                 .document(selectedTitle).collection("EventList");
+        final StorageReference imageFolderReference = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle);
 
 
         habitListReference.document(selectedTitle)
@@ -437,6 +481,49 @@ public class ViewEditHabitActivity extends AppCompatActivity implements Database
             }
         });
 
+        imageFolderReference.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference item : listResult.getItems()) {
+                            item.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Delete photo", "Photo deleted successfully");
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Delete photo", "Error deleting photo", e);
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
+
         finish();
     }
+
+    private void uploadImageToFirebase(String habitTitle, String imageName, byte[] imageData) {
+        final StorageReference imageReference = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+imageName);
+        UploadTask uploadTask = imageReference.putBytes(imageData);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+            }
+        });
+
+
+    }
+
 }

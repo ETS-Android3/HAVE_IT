@@ -102,7 +102,6 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     public static final int CAMERA_PREM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
-    private StorageReference storageReference;
     String currentPhotoPath;
     Uri contentUri;
     ImageView selectedImage;
@@ -116,7 +115,6 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
-        storageReference = FirebaseStorage.getInstance().getReference();
         context = this.getApplicationContext();
 
         eventText = findViewById(R.id.event_editText);
@@ -209,7 +207,7 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
         }
     }
     private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
-        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+event+date+".jpg");
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -228,8 +226,8 @@ public class AddEventActivity extends AppCompatActivity implements FirestoreAddD
                 Toast.makeText(AddEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
     private String getFileExt(Uri contentUri){
         ContentResolver c = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();

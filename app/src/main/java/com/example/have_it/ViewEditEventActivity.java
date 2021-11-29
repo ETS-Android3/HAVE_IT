@@ -103,7 +103,6 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
     public static final int CAMERA_PREM_CODE = 101;
     public static final int CAMERA_REQUEST_CODE =102;
     public static final int GALLERY_REQUEST_CODE=105;
-    private StorageReference storageReference;
     String currentPhotoPath;
     ImageView selectedImage;
     ImageButton cameraBtn, galleryBtn;
@@ -121,22 +120,17 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         selectedEventDate = i.getStringExtra("event_date");
         selectedHabit = i.getStringExtra("habit");
         context = this;
+        contentUri = Uri.EMPTY;
 
-        final CollectionReference eventListReference = db.collection("Users")
-                .document(logged.getUID())
-                .collection("HabitList")
-                .document(selectedHabit).collection("EventList");
         eventText = findViewById(R.id.event_editText_viewedit);
         dateText = findViewById(R.id.event_date_viewedit);
         addressText = findViewById(R.id.address);
         changeLocation = findViewById(R.id.change_location_button);
         confirm = findViewById(R.id.confirm_button_viewedit);
         delete = findViewById(R.id.delete_button);
-        storageReference = FirebaseStorage.getInstance().getReference();
         selectedImage = findViewById(R.id.displayImageView);
         galleryBtn = findViewById(R.id.galleryBtn);
         cameraBtn = findViewById(R.id.cameraBtn);
-        storageReference = FirebaseStorage.getInstance().getReference();
 
         getDocument();
         cameraBtn.setOnClickListener(new View.OnClickListener(){
@@ -195,43 +189,14 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
             }
         });
 
+
+
+
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Toast.makeText( getApplicationContext(),  selected_event_date, Toast.LENGTH_SHORT).show();
-                eventListReference.document(selectedEventDate)
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Intent i = getIntent();
-                                String selectedTitle = i.getStringExtra("habit");
-                                // Create a reference to the file to delete
-                                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+eventText.getText().toString()+dateText.getText().toString()+".jpg");
-
-                                // Delete the file
-                                eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // File deleted successfully
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Uh-oh, an error occurred!
-                                    }
-                                });
-                                Log.d("Delete Event", "Habit data has been deleted successfully!");
-                                finish();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("Delete event", "Error deleting document", e);
-                            }
-                        });
-
+                deleteDataInFirestore();
             }
         });
 
@@ -278,9 +243,7 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                 dateText.setText( documentSnapshot.getData().get("date").toString());
                 latitude = (String) documentSnapshot.getData().get("latitude");
                 longitude = (String) documentSnapshot.getData().get("longitude");
-                Intent i = getIntent();
-                String selectedTitle = i.getStringExtra("habit");
-                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedTitle+"/"+eventText.getText().toString()+dateText.getText().toString()+".jpg");
+                StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedHabit+"/"+dateText.getText().toString()+".jpg");
                 eventImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -329,14 +292,11 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         // Retrieving the city name and the province name from the EditText fields
         final String event = eventText.getText().toString();
         HashMap<String, Object> data = new HashMap<>();
-        Intent i = getIntent();
-        String selectedTitle = i.getStringExtra("habit");
         if (event.length()>0){
             data.put("event", event);
             data.put("date", dateText.getText().toString());
             data.put("latitude", latitude);
             data.put("longitude", longitude);
-            uploadImageToFirebase(selectedTitle,eventText.getText().toString(), dateText.getText().toString(), contentUri);
 
             if (dateText.getText().toString().equals(selectedEventDate)){
                 eventListReference
@@ -345,14 +305,15 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d("Edit Habit", "Habit data has been deleted successfully!");
+                                uploadImageToFirebase(selectedHabit,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                Log.d("Edit Habit", "Habit data has been edited successfully!");
                                 finish();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.w("Edit Habit", "Error deleting document", e);
+                                Log.w("Edit Habit", "Error editing document", e);
                             }
                         });
             }
@@ -368,6 +329,21 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                                     if (document.exists()) {
                                         Toast.makeText(getApplicationContext(), "cannot edit event: another event at the same day", Toast.LENGTH_LONG).show();
                                     } else {
+                                        uploadImageToFirebase(selectedHabit,eventText.getText().toString(), dateText.getText().toString(), contentUri);
+                                        StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedHabit+"/"+selectedEventDate+".jpg");
+                                        // Delete the file
+                                        eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("Delete photo", "Photo deleted successfully");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("Delete photo", "Error deleting photo", e);
+                                            }
+                                        });
+
                                         eventListReference
                                                 .document(selectedEventDate)
                                                 .delete()
@@ -432,26 +408,27 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
         }
     }
     private void uploadImageToFirebase( String habitTitle, String event, String date, Uri contentUri) {
-        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+event+date+".jpg");
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(selectedImage);
-                    }
-                });
+        final StorageReference image = storageReference.child("eventPhotos/"+logged.getUID()+"/"+habitTitle+"/"+date+".jpg");
+        if (!contentUri.equals(Uri.EMPTY)){
+            image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.get().load(uri).into(selectedImage);
+                        }
+                    });
 
-                Toast.makeText(ViewEditEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ViewEditEventActivity.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+                    Toast.makeText(ViewEditEventActivity.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(ViewEditEventActivity.this, "Upload Failed.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
     /**
      * save photo on the gallery
@@ -514,6 +491,20 @@ public class ViewEditEventActivity extends AppCompatActivity implements Database
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Delete Event", "Habit data has been deleted successfully!");
+                        StorageReference eventImageRef = storageReference.child("eventPhotos/"+logged.getUID()+"/"+selectedHabit+"/"+dateText.getText().toString()+".jpg");
+                        // Delete the file
+                        eventImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Delete photo", "Photo deleted successfully");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Delete photo", "Error deleting photo", e);
+                            }
+                        });
+
                         finish();
                     }
                 })
