@@ -53,7 +53,7 @@ import java.util.Locale;
 
 /**
  *This is the activity for edit or delete event
- * @author songkunguo
+ * @author songkunguo & jianbangchen
  */
 public class ViewEditEventActivity extends AppCompatActivity implements DatabaseUserReference, FirestoreGetDocument, FirestoreAddData, FirestoreDeleteData{
     /**

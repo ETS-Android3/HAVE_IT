@@ -57,7 +57,7 @@ import java.util.Locale;
 
 /**
  *This is the activity for adding a new event
- * @author songkunguo & ruiqingtian
+ * @author songkunguo & ruiqingtian & jianbangchen
  */
 public class AddEventActivity extends AppCompatActivity implements FirestoreAddData, DatabaseUserReference{
 
